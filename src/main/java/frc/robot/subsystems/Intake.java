@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -15,7 +16,7 @@ public class Intake {
     private CANSparkMax mFlapperWheels;
     private CANSparkMax mConveyor;
     private DoubleSolenoid sIntake;
-    private DoubleSolenoid sStopper;
+    private DigitalInput gamePiecePhotoEye;
 
     
 
@@ -33,7 +34,7 @@ public class Intake {
         mFlapperWheels = new CANSparkMax(Constants.mFlapperWheels, MotorType.kBrushless);
         mConveyor = new CANSparkMax(Constants.mConveyor, MotorType.kBrushless);
         sIntake = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.sIntakeID[0], Constants.sIntakeID[1]);
-        sStopper= new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.sStopperID[0], Constants.sStopperID[1]);
+        gamePiecePhotoEye = new DigitalInput(Constants.gamePiecePhotoeye);
     }
 
     /**
@@ -48,17 +49,11 @@ public class Intake {
      * Sets the state of the intake
      * @param val the position the intake should be in
      */
-    public void setIntakeState(Value val){
+    public void setIntakeState(Value val){  
         sIntake.set(val);
     }
 
-    /**
-     * Sets the state of the stopper
-     * @param val the position the intake should be in
-     */
-    public void setStopperState(Value val){
-        sStopper.set(val);
-    }
+    
 
     /**
      * Sets the speed of the flappers
@@ -74,5 +69,13 @@ public class Intake {
      */
     public void setConveyorSpeed(double speed){
         mConveyor.set(speed);
+    }
+    
+    public Value getIntakePos(){
+        return sIntake.get();
+    }
+   
+    public boolean getGamePiecePhotoeye(){
+        return gamePiecePhotoEye.get();
     }
 }

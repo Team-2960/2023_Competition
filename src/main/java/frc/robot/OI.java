@@ -111,11 +111,7 @@ public class OI {
             elevatorClaw.setGripperState(Value.kReverse);
         }
         //TEST JOY 2
-        if(testJoy2.getRawButton(0)){
-            elevatorClaw.setIntakeState(Value.kForward);
-        }else if(testJoy2.getRawButton(1)){
-            elevatorClaw.setIntakeState(Value.kReverse);
-        }
+        
         if(testJoy2.getRawButton(2)){
             elevatorClaw.setWristState(Value.kForward);
         }else if(testJoy2.getRawButton(3)){
@@ -144,9 +140,9 @@ public class OI {
             intake.setIntakeState(Value.kReverse);
         }
         if(testJoy2.getRawButton(9)){
-            intake.setStopperState(Value.kForward);
+            elevatorClaw.setStopperState(Value.kForward);
         }else if(testJoy2.getRawButton(10)){
-            intake.setStopperState(Value.kReverse);
+            elevatorClaw.setStopperState(Value.kReverse);
         }
     }
 }
