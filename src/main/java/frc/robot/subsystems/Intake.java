@@ -8,6 +8,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import frc.robot.Constants;
 
@@ -17,8 +18,10 @@ public class Intake {
     private CANSparkMax mConveyor;
     private DoubleSolenoid sIntake;
     private DigitalInput gamePiecePhotoEye;
-
-    
+    private boolean intakeIn;
+    private boolean conveyorOn;
+    private double conveyorPos;
+    private Timer intakeTimer;
 
     private static Intake intake;
 
@@ -35,6 +38,9 @@ public class Intake {
         mConveyor = new CANSparkMax(Constants.mConveyor, MotorType.kBrushless);
         sIntake = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.sIntakeID[0], Constants.sIntakeID[1]);
         gamePiecePhotoEye = new DigitalInput(Constants.gamePiecePhotoeye);
+        intakeIn = true;
+        conveyorOn = false;
+        intakeTimer = new Timer();
     }
 
     /**
@@ -51,9 +57,56 @@ public class Intake {
      */
     public void setIntakeState(Value val){  
         sIntake.set(val);
+        if(val==Value.kForward){
+            intakeIn = true;
+
+        }else{
+            intakeIn = false;
+        }
+
+    }
+    public void setIntakeState2(boolean state){
+        if(state){
+            sIntake.set(Value.kForward);
+            intakeIn = true;
+        }else{
+            sIntake.set(Value.kReverse);
+            intakeIn = false;
+        }
+        intakeTimer.reset();
+        intakeTimer.start();
+    }
+    public void checkIntakeTimer(){
+        if(intakeTimer.get()>.25){
+            sIntake.set(Value.kOff);
+            intakeTimer.reset();
+            intakeTimer.stop();
+        }
     }
 
-    
+    public void setIntakeForward(boolean state){
+        if(state){
+            setIntakeSpeed(1);
+            setFlappySpeed(1);
+            setConveyorSpeed(1);
+            conveyorOn = true;
+            conveyorPos = mConveyor.getEncoder().getPosition();
+        }else{
+            setIntakeSpeed(0);
+            setFlappySpeed(0);
+        }
+    }
+
+    public void checkConveyorState(){
+        if(conveyorOn){
+           if (getGamePiecePhotoeye()){
+            setConveyorSpeed(0);
+           }
+           else if((mConveyor.getEncoder().getPosition()-conveyorPos)>2000){
+            setConveyorSpeed(0);
+           }
+        }
+    }
 
     /**
      * Sets the speed of the flappers
@@ -69,6 +122,15 @@ public class Intake {
      */
     public void setConveyorSpeed(double speed){
         mConveyor.set(speed);
+        if(speed == 0){
+            conveyorOn = false;
+        }
+    }
+    public void checkIntakePosition(){
+        if(intakeIn){
+            setFlappySpeed(0);
+            setIntakeSpeed(0);
+        }
     }
     
     public Value getIntakePos(){

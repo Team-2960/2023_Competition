@@ -6,6 +6,7 @@ import frc.robot.Constants;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.simulation.DoubleSolenoidSim;
 
@@ -23,6 +24,10 @@ public class ElevatorClaw {
     //Photoeyes
     private DigitalInput lowerPhotoEye;
     private DigitalInput upperPhotoEye;
+    //Timers
+    private Timer gripperTimer;
+    private Timer wristTimer;
+    private Timer stopperTimer;
 
     public enum ElevatorState{
         HOME,
@@ -127,5 +132,57 @@ public class ElevatorClaw {
     }
     public boolean getUpperPhotoEye(){
         return upperPhotoEye.get();
+    }
+
+    //Timers for Solenoids
+    public void setGripperState2(boolean state){
+        if(state){
+            sGripper.set(Value.kForward);
+        }else{
+            sGripper.set(Value.kReverse);
+        }
+        gripperTimer.reset();
+        gripperTimer.start();
+    }
+    public void checkGripperTimer(){
+        if(gripperTimer.get()>.25){
+            sGripper.set(Value.kOff);
+            gripperTimer.reset();
+            gripperTimer.stop();
+        }
+    }
+
+    public void setWristState2(boolean state){
+        if(state){
+            sWrist.set(Value.kForward);
+        }else{
+            sWrist.set(Value.kReverse);
+        }
+        wristTimer.reset();
+        wristTimer.start();
+    }
+    public void checkWristTimer(){
+        if(wristTimer.get()>.25){
+            sWrist.set(Value.kOff);
+            wristTimer.reset();
+            wristTimer.stop();
+        }
+    }
+
+    public void setStopperState2(boolean state){
+        if(state){
+            sStopper.set(Value.kForward);
+        }else{
+            sStopper.set(Value.kReverse);
+        }
+        stopperTimer.reset();
+        stopperTimer.start();
+    }
+    public void checkStopperTimer(){
+        if(stopperTimer.get()>.25){
+            sStopper.set(Value.kOff);
+            stopperTimer.reset();
+            stopperTimer.stop();
+        }
     }
 }
