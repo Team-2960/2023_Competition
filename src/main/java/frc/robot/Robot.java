@@ -24,6 +24,8 @@ public class Robot extends TimedRobot {
   private OI oi;
   private PowerDistribution pdp;
   private Compressor ph;
+  private Intake intake;
+  private ElevatorClaw elevatorClaw;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -33,7 +35,10 @@ public class Robot extends TimedRobot {
     oi = OI.get_Instance();
     pdp = new PowerDistribution(Constants.PDH, PowerDistribution.ModuleType.kRev);
     pdp.setSwitchableChannel(true);
-    ph = new Compressor(PneumaticsModuleType.REVPH);
+    ph = new Compressor(18,PneumaticsModuleType.REVPH);
+    intake = Intake.get_Instance();
+    elevatorClaw = ElevatorClaw.get_Instance();
+    ph.disable();
   }
 
   @Override
@@ -50,7 +55,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
-    oi.testOI();
+    //oi.testOI();
+    oi.soberOI();
+    intake.periodic();
+    elevatorClaw.periodic();
   }
 
   @Override
@@ -63,7 +71,9 @@ public class Robot extends TimedRobot {
   public void testInit() {}
 
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    elevatorClaw.periodic();
+  }
 
   @Override
   public void simulationInit() {}

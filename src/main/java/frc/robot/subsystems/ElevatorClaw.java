@@ -2,13 +2,15 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
-import frc.robot.Constants;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.simulation.DoubleSolenoidSim;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.Constants;
 
 public class ElevatorClaw {
 
@@ -29,6 +31,8 @@ public class ElevatorClaw {
     private Timer wristTimer;
     private Timer stopperTimer;
 
+    private PIDController pElevatorPID;
+
     public enum ElevatorState{
         HOME,
         LEVEL1,
@@ -40,15 +44,17 @@ public class ElevatorClaw {
     private ElevatorState targetState;
 
     private ElevatorClaw (){
-        mRElevator= new TalonFX(Constants.mRElevator, "CANivore");
-        mLElevator= new TalonFX(Constants.mLElevator, "CANivore");
-        sGripper= new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.sGripperID[0], Constants.sGripperID[1]);
-        sWrist= new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.sWristID[0], Constants.sWristID[1]);
-        sStopper= new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.sStopperID[0], Constants.sStopperID[1]);
+        mRElevator= new TalonFX(Constants.mRElevator, "Default Name");
+        mLElevator= new TalonFX(Constants.mLElevator, "Default Name");
+        pElevatorPID = new PIDController(Constants.kElevatorp,Constants.kElevatori,Constants.kElevatord);
+        sGripper= new DoubleSolenoid(18,PneumaticsModuleType.REVPH, Constants.sGripperID[0], Constants.sGripperID[1]);
+        sWrist= new DoubleSolenoid(18,PneumaticsModuleType.REVPH, Constants.sWristID[0], Constants.sWristID[1]);
+        sStopper= new DoubleSolenoid(18,PneumaticsModuleType.REVPH, Constants.sStopperID[0], Constants.sStopperID[1]);
         lowerPhotoEye = new DigitalInput(Constants.LowerElevatorPhotoeye);
         upperPhotoEye = new DigitalInput(Constants.UpperElevatorPhotoeye);
         currentState = ElevatorState.HOME;
         targetState = ElevatorState.HOME;
+        
     }
 
     public static ElevatorClaw get_Instance(){
@@ -71,7 +77,7 @@ public class ElevatorClaw {
      * @param val the state of gripper solenoids
      */
     public void setWristState(Value val){
-        sGripper.set(val);
+        sWrist.set(val);
     }
 
    
@@ -80,12 +86,12 @@ public class ElevatorClaw {
      * @param speedR Left speed
      * @param speedL Right speed
      */
-    public void setElevator(double speedR, double speedL){
-        mLElevator.set(ControlMode.PercentOutput, speedL);
-        mRElevator.set(ControlMode.PercentOutput, speedR);
+    public void setElevator(double speed){
+        mLElevator.set(ControlMode.PercentOutput, -speed);
+        mRElevator.set(ControlMode.PercentOutput, speed);
     }
-    //Elevator move conditions
-    public void setElevatorSpeed(double speed){
+    //Elevator move conditions-
+    /*public void setElevatorSpeed(double speed){
         if(lowerPhotoEye.get() && speed < 0){
             speed = 0;
         }else if(upperPhotoEye.get() && speed > 0){
@@ -93,6 +99,50 @@ public class ElevatorClaw {
         }
         mLElevator.set(ControlMode.PercentOutput, speed);
         mRElevator.set(ControlMode.PercentOutput, speed);
+    }*/
+    public void calcElevatorSpeed(double speed){
+        double encoderValue =  (mLElevator.getSelectedSensorVelocity()+mRElevator.getSelectedSensorVelocity())/2;
+        double calcSpeed = pElevatorPID.calculate(encoderValue, speed);
+        SmartDashboard.putNumber("calculatedSpeed", calcSpeed);
+        setElevator(calcSpeed);
+    }
+    public void setElevatorState(ElevatorState position){
+        double targetPosition = 0;
+        targetState = position;
+        if(position == ElevatorState.LEVEL1){
+            targetPosition = Constants.cLevel1;
+        }
+        else if(position == ElevatorState.LEVEL2){
+            targetPosition = Constants.cLevel2;
+        }
+        else if(position == ElevatorState.LEVEL3){
+            targetPosition = Constants.cLevel3;
+        }
+        else if(position == ElevatorState.HOME){
+            targetPosition = Constants.cHome;
+        }
+        if(currentState != targetState){
+            currentState = ElevatorState.MOVING;
+            setElevatorPosition(targetPosition);
+        }
+    }
+    public void setElevatorPosition(double position){
+        double currentPos = mRElevator.getSelectedSensorPosition();
+        double diff = currentPos - position;
+        double far = 10;
+        double tolerance = 0.5;
+        double direction = 1;
+        if(diff < 0) direction = -1;
+        if(Math.abs(diff) <= tolerance){
+            calcElevatorSpeed(0);
+            currentState = targetState;
+        }
+        else if(Math.abs(diff) >= far){
+            calcElevatorSpeed(1000 * direction);
+        }
+        else if(Math.abs(diff) < far){
+            calcElevatorSpeed(200 * direction);
+        }
     }
     //Elevator move conditions (stopper)
     public void checkStopperPosition(){
@@ -184,5 +234,12 @@ public class ElevatorClaw {
             stopperTimer.reset();
             stopperTimer.stop();
         }
+    }
+    public void periodic(){
+        //Right elevator is negative
+        SmartDashboard.putNumber("elevatorEncoder1", mLElevator.getSelectedSensorVelocity());
+        SmartDashboard.putNumber("elevatorEncoder2", mRElevator.getSelectedSensorVelocity());
+        SmartDashboard.putNumber("elevatorPosition1", mLElevator.getSelectedSensorPosition());
+        SmartDashboard.putNumber("elevatorPosition2", mRElevator.getSelectedSensorPosition());
     }
 }

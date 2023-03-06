@@ -1,15 +1,14 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 
 public class Intake {
@@ -36,7 +35,7 @@ public class Intake {
         mIntake = new CANSparkMax(Constants.mIntakeWheels, MotorType.kBrushless);
         mFlapperWheels = new CANSparkMax(Constants.mFlapperWheels, MotorType.kBrushless);
         mConveyor = new CANSparkMax(Constants.mConveyor, MotorType.kBrushless);
-        sIntake = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.sIntakeID[0], Constants.sIntakeID[1]);
+        sIntake = new DoubleSolenoid(18,PneumaticsModuleType.REVPH, Constants.sIntakeID[0], Constants.sIntakeID[1]);
         gamePiecePhotoEye = new DigitalInput(Constants.gamePiecePhotoeye);
         intakeIn = true;
         conveyorOn = false;
@@ -86,7 +85,7 @@ public class Intake {
 
     public void setIntakeForward(boolean state){
         if(state){
-            setIntakeSpeed(1);
+            setIntakeSpeed(-1);
             setFlappySpeed(1);
             setConveyorSpeed(1);
             conveyorOn = true;
@@ -101,10 +100,11 @@ public class Intake {
         if(conveyorOn){
            if (getGamePiecePhotoeye()){
             setConveyorSpeed(0);
+            conveyorOn =  false;
            }
-           else if((mConveyor.getEncoder().getPosition()-conveyorPos)>2000){
-            setConveyorSpeed(0);
-           }
+           //else if((mConveyor.getEncoder().getPosition()-conveyorPos)>2000){
+            //setConveyorSpeed(0);
+           //}
         }
     }
 
@@ -138,6 +138,11 @@ public class Intake {
     }
    
     public boolean getGamePiecePhotoeye(){
-        return gamePiecePhotoEye.get();
+        return !gamePiecePhotoEye.get();
+    }
+    public void periodic(){
+    checkConveyorState();
+       SmartDashboard.putNumber("conveyEncod", mConveyor.getEncoder().getPosition());
+     
     }
 }
