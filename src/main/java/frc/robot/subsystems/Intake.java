@@ -19,10 +19,16 @@ public class Intake {
     private DigitalInput gamePiecePhotoEye;
     private boolean intakeIn;
     private boolean conveyorOn;
-    private double conveyorPos;
+    private Timer conveyorTimer;
     private Timer intakeTimer;
 
     private static Intake intake;
+
+    public enum IntakeDirection{
+        FORWARD,
+        OFF,
+        REVERSE
+    }
 
     public static Intake get_Instance(){
         if(intake == null){
@@ -40,6 +46,7 @@ public class Intake {
         intakeIn = true;
         conveyorOn = false;
         intakeTimer = new Timer();
+        conveyorTimer = new Timer();
     }
 
     /**
@@ -83,13 +90,18 @@ public class Intake {
         }
     }
 
-    public void setIntakeForward(boolean state){
-        if(state){
+    public void setIntakeAll(IntakeDirection dir){
+        if(dir == IntakeDirection.FORWARD){
             setIntakeSpeed(-1);
             setFlappySpeed(1);
             setConveyorSpeed(1);
             conveyorOn = true;
-            conveyorPos = mConveyor.getEncoder().getPosition();
+            conveyorTimer.restart();
+        }else if(dir == IntakeDirection.REVERSE){
+            setIntakeSpeed(1);
+            setFlappySpeed(-1);
+            setConveyorSpeed(-1);
+            conveyorOn = false;
         }else{
             setIntakeSpeed(0);
             setFlappySpeed(0);
@@ -102,9 +114,10 @@ public class Intake {
             setConveyorSpeed(0);
             conveyorOn =  false;
            }
-           //else if((mConveyor.getEncoder().getPosition()-conveyorPos)>2000){
-            //setConveyorSpeed(0);
-           //}
+           else if(conveyorTimer.get() > 1.5){
+            setConveyorSpeed(0);
+            conveyorOn = false;
+           }
         }
     }
 
@@ -141,8 +154,7 @@ public class Intake {
         return !gamePiecePhotoEye.get();
     }
     public void periodic(){
-    checkConveyorState();
-       SmartDashboard.putNumber("conveyEncod", mConveyor.getEncoder().getPosition());
-     
+        checkConveyorState();
+        SmartDashboard.putNumber("conveyEncod", mConveyor.getEncoder().getPosition());
     }
 }

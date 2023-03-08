@@ -158,15 +158,7 @@ public class OI {
             elevatorClaw.setWristState(Value.kReverse);
         }
 
-        // INTAKE
-        if (testJoy2.getRawButton(4)) {
-            // intake.setConveyorSpeed(0.2);
-            intake.setIntakeForward(true);
-        } else {
-            // intake.setConveyorSpeed(0);
-            intake.setIntakeForward(false);
-
-        }
+      
         /*
          * if(testJoy2.getRawButton(5)){
          * intake.setFlappySpeed(1);
@@ -232,10 +224,12 @@ public class OI {
         }
 
         if (testJoy2.getRawButton(5)){
-            intake.setIntakeForward(true);
+            intake.setIntakeAll(Intake.IntakeDirection.FORWARD);
+        }else if(testJoy2.getRawButton(6)){
+            intake.setIntakeAll(Intake.IntakeDirection.REVERSE);
         }
         else {
-            intake.setIntakeForward(false);
+            intake.setIntakeAll(Intake.IntakeDirection.OFF);
         }
     }
 
