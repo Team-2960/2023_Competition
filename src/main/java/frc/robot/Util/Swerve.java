@@ -1,16 +1,23 @@
 package frc.robot.Util;
 
-
-
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
+//MOTORS
+import com.revrobotics.CANDigitalInput;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 //PID
 import edu.wpi.first.math.controller.PIDController;
-
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-
+import edu.wpi.first.math.geometry.Translation2d;
 //SENSORS
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 
+import com.ctre.phoenix.CANifier;
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.StatusFrame;
@@ -22,12 +29,17 @@ import frc.robot.Constants;
 public class Swerve {
   public TalonFX driveMotor;
   private TalonFX angleMotor;
-  private PIDController anglePID;
+  public PIDController anglePID;
   private PIDController drivePID;
   private CANCoder angleEncoder;
+  private Translation2d translation2d;
+  private Rotation2d rotation2d;
+  private Pose2d pose2d;
 
+  private double prevEncPos = 0;
+  private double prevTime = 0;
 
-
+  private Timer timer;
     public Swerve(int motorIdDrive,int motorIdAngle,int encoderID, PIDController pidA, PIDController pidD, double offSet){
         angleEncoder = new CANCoder(encoderID);
         angleEncoder.configMagnetOffset(offSet);
@@ -40,6 +52,8 @@ public class Swerve {
         angleMotor.setStatusFramePeriod(StatusFrame.Status_1_General, 100);
         angleMotor.setStatusFramePeriod(StatusFrame.Status_2_Feedback0, 100);
         
+        timer = new Timer();
+        timer.start();
     }
 
     public void resetDriveEnc(){
@@ -83,6 +97,8 @@ public class Swerve {
     }
 
     public double anglePIDCalcABS(double angle){
+        angle += 180;
+        //angle *= 180/Math.PI;
         double calcAngleSpeed = 0;
         
         if(angle != 42069) {
@@ -124,6 +140,11 @@ public class Swerve {
     }
     //new functions
     public double getMetersPerSec() {
+        double dTime = (timer.get() - prevTime);
+        double dTheta = driveMotor.getSelectedSensorPosition() - prevEncPos;
+        prevEncPos = driveMotor.getSelectedSensorPosition();
+        prevTime = timer.get();
+        //return ((Math.PI*3.9*0.0254)/(2048*8.16)) * (dTheta/dTime);
         return driveMotor.getSelectedSensorVelocity() * Constants.velocityToMeters;
     }
     public void setMetersPerSec(double metersPerSec) {
@@ -133,11 +154,37 @@ public class Swerve {
         setDriveSpeed(FF + pidVal);
     }
     public void modState(SwerveModuleState state) {
-        state.angle.getDegrees();
-        setAngleSpeed(anglePIDCalcABS(state.angle.getDegrees()+90));
+        double curPos = angleEncoder.getAbsolutePosition();
+        double posAngle = state.angle.getDegrees()+90 + 180;
+        double curAngle = state.angle.getDegrees()+90;
+
+
+        double curError = Math.abs(curPos - curAngle);
+        double posError = Math.abs(curPos - posAngle);
+        
+        if(posError < curError){
+            state.angle.getDegrees();
+            setAngleSpeed(anglePIDCalcABS(posAngle));
+            setMetersPerSec(-state.speedMetersPerSecond);
+        }else{
+            state.angle.getDegrees();
+        setAngleSpeed(anglePIDCalcABS(curAngle));
         setMetersPerSec(state.speedMetersPerSecond);
+        }
     }
+
     public SwerveModuleState getState() {
         return new SwerveModuleState(getMetersPerSec(), new Rotation2d(Math.toRadians(angleEncoder.getAbsolutePosition()-90)));
     }
+
+    public SwerveModulePosition getPosition() {
+        return new SwerveModulePosition(getMetersPerSec(), new Rotation2d(Math.toRadians(angleEncoder.getAbsolutePosition()-90)));
+    }
+
+    public String toString(){
+        String str = "Angle: " + getEncoder() + "\n" + 
+                     "M/S: " + getMetersPerSec();
+        return str;
+    }
 }
+

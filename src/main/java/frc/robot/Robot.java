@@ -8,6 +8,7 @@ import javax.print.attribute.standard.Compression;
 
 import com.ctre.phoenixpro.hardware.TalonFX;
 
+import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
@@ -26,23 +27,28 @@ public class Robot extends TimedRobot {
   private Compressor ph;
   private Intake intake;
   private ElevatorClaw elevatorClaw;
+  private Drive drive;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
    */
   @Override
   public void robotInit() {
+    //PortForwarder.add(5801, "limelight.local", 5801);
     oi = OI.get_Instance();
     pdp = new PowerDistribution(Constants.PDH, PowerDistribution.ModuleType.kRev);
     pdp.setSwitchableChannel(true);
     ph = new Compressor(18,PneumaticsModuleType.REVPH);
     intake = Intake.get_Instance();
     elevatorClaw = ElevatorClaw.get_Instance();
+    drive = Drive.get_Instance();
     ph.disable();
+    drive.coastMode();
   }
 
   @Override
-  public void robotPeriodic() {}
+  public void robotPeriodic() {
+  }
 
   @Override
   public void autonomousInit() {}
@@ -55,8 +61,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopPeriodic() {
+    oi.regularOI();
+    drive.periodicTele();
     //oi.testOI();
-    oi.soberOI();
+    //oi.soberOI();
     intake.periodic();
     elevatorClaw.periodic();
   }
@@ -72,7 +80,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void testPeriodic() {
-    elevatorClaw.periodic();
+    //elevatorClaw.periodic();
   }
 
   @Override

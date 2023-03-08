@@ -152,6 +152,8 @@ public class Drive {
 
         //Construct Odometry
         so = swerveOdometry.get_Instance();
+
+        autoTimer = new Timer();
     }
 
     //Set the motors to break mode
@@ -210,13 +212,13 @@ public class Drive {
             double B = angleVectorX - rotationVectorX;
             double C = angleVectorY + rotationVectorY;
             double D = angleVectorY - rotationVectorY;
-            frontLeftSwerveSpeed = (1/75) * Math.sqrt(Math.pow(A, 2.0) + Math.pow(C, 2.0));
-            frontLeftSwerveAngle = Math.atan2(A, C) * 180 / Math.PI;
-            backLeftSwerveSpeed = (1/75) * Math.sqrt(Math.pow(A, 2.0) + Math.pow(D, 2.0));
+            frontLeftSwerveSpeed = Math.sqrt(Math.pow(A, 2.0) + Math.pow(C, 2.0));
+            frontLeftSwerveAngle = 180;//Math.atan2(A, C) * 180 / Math.PI;
+            backLeftSwerveSpeed = Math.sqrt(Math.pow(A, 2.0) + Math.pow(D, 2.0));
             backLeftSwerveAngle = Math.atan2(A, D) * 180 / Math.PI;
-            frontRightSwerveSpeed = (1/75) * Math.sqrt(Math.pow(B, 2.0) + Math.pow(C, 2.0));
+            frontRightSwerveSpeed = Math.sqrt(Math.pow(B, 2.0) + Math.pow(C, 2.0));
             frontRightSwerveAngle = Math.atan2(B, C) * 180 / Math.PI;
-            backRightSwerveSpeed = (1/75) * Math.sqrt(Math.pow(B, 2.0) + Math.pow(D, 2.0));
+            backRightSwerveSpeed = Math.sqrt(Math.pow(B, 2.0) + Math.pow(D, 2.0));
             backRightSwerveAngle = Math.atan2(B, D) * 180 / Math.PI;
         } else {
             frontLeftSwerveSpeed = 0;
@@ -252,12 +254,21 @@ public class Drive {
 
     //Called instead of the periodic function
     public void periodicTele() {
-        updateOdometry();
+        SmartDashboard.putNumber("fl Angle", frontLeft.getEncoder());
+        SmartDashboard.putNumber("fr Angle", frontRight.getEncoder());
+        SmartDashboard.putNumber("bl Angle", backLeft.getEncoder());
+        SmartDashboard.putNumber("br Angle", backRight.getEncoder());
+
+        SmartDashboard.putNumber("fl delta", frontLeftSwerveAngle - frontLeft.getEncoder());
+        SmartDashboard.putNumber("error", frontLeft.anglePID.getPositionError());
+        SmartDashboard.putNumber("tar pos", frontLeftSwerveAngle);
+        SmartDashboard.putNumber("fl speed", frontLeft.anglePIDCalcABS(frontLeftSwerveAngle));
+        //updateOdometry();
         sanitizeAngle();
-        frontLeft.setSpeed(frontLeftSwerveSpeed, frontLeft.anglePIDCalcABS(frontLeftSwerveAngle));
-        frontRight.setSpeed(frontRightSwerveSpeed, frontRight.anglePIDCalcABS(frontRightSwerveAngle));
-        backLeft.setSpeed(backLeftSwerveSpeed, backLeft.anglePIDCalcABS(backLeftSwerveAngle));
-        backRight.setSpeed(backRightSwerveSpeed, backRight.anglePIDCalcABS(backRightSwerveAngle));
+        frontLeft.setSpeed(frontLeftSwerveSpeed/75, frontLeft.anglePIDCalcABS(frontLeftSwerveAngle));
+        frontRight.setSpeed(frontRightSwerveSpeed/75, frontRight.anglePIDCalcABS(frontRightSwerveAngle));
+        backLeft.setSpeed(backLeftSwerveSpeed/75, backLeft.anglePIDCalcABS(backLeftSwerveAngle));
+        backRight.setSpeed(backRightSwerveSpeed/75, backRight.anglePIDCalcABS(backRightSwerveAngle));
     }
 
     //Autonomous Functions

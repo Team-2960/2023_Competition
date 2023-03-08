@@ -42,6 +42,46 @@ public class OI {
         return oi;
     }
 
+    public double driveAngle(double x, double y) {
+        double done = 0;
+        y = -y;
+        if (x < 0) {
+            if (y > 0) {
+                done = (180 / Math.PI) * (3 * Math.PI / 2 - Math.atan(y / -x));
+            } else {
+                done = (180 / Math.PI) * (3 * Math.PI / 2 + Math.atan(-y / -x));
+            }
+        } else if (x > 0) {
+            if (y > 0) {
+                done = (180 / Math.PI) * (Math.PI / 2 + Math.atan(y / x));
+            } else {
+                done = (180 / Math.PI) * (Math.PI / 2 - Math.atan(-y / x));
+            }
+        } else {
+            if (y < 0) {
+                done = 1;
+            } else {
+                done = 180;
+            }
+
+        }
+
+        done = Math.abs(done - 360);
+        return done;
+    }
+
+    public void regularOI(){
+        //Drive Code
+
+        drive.setVector(driveAngle(driverControl.getRawAxis(0), driverControl.getRawAxis(1)),
+                    Math.sqrt(Math.pow(Math.abs(driverControl.getRawAxis(0)), 2)
+                            + Math.pow(Math.abs(driverControl.getRawAxis(1)), 2)),
+                    driverControl.getRawAxis(4) * 2);
+                    
+    }
+
+
+
     public void testOI() {
 
         // BL
