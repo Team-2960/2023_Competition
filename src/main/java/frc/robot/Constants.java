@@ -61,32 +61,32 @@ public class Constants {
     public static double dPFL = 0.0008;
     public static double dIFL = 0;
     public static double dDFL = 0;
-    public static double aPFL = 0.0007;
+    public static double aPFL = 0.008;
     public static double aIFL = 0.0;
     public static double aDFL = 0.00;
     public static double dPFR = 0.0008;
     public static double dIFR = 0;
     public static double dDFR = 0;
-    public static double aPFR = 0.0007;
+    public static double aPFR = 0.008;
     public static double aIFR = 0.0;
     public static double aDFR = 0.00;
     public static double dPBL = 0.0008;
     public static double dIBL = 0;
     public static double dDBL = 0;
-    public static double aPBL = 0.0007;
+    public static double aPBL = 0.008;
     public static double aIBL = 0.0;
     public static double aDBL = 0.00;
     public static double dPBR = 0.0008;//0.0008
     public static double dIBR = 0;
     public static double dDBR = 0;
-    public static double aPBR = 0.0007;//0.007
+    public static double aPBR = 0.008;//0.007
     public static double aIBR = 0.0;
     public static double aDBR = 0.00;
 
     //Swerve Home Constants
-    public static double flHome = -6.5;//-7.27;
-    public static double frHome = -70;//-269.19;
-    public static double blHome = -28;//-73.81;
-    public static double brHome = -21;//-157.03;
+    public static double flHome = -324.58+90;//-7.27;
+    public static double frHome = -275.8+90;//-269.19;
+    public static double blHome = -203.64+90;//-73.81;
+    public static double brHome = -176.74-180+90;//-157.03;
     public static double modLoc = 11.5  * 0.0254;
 }

@@ -119,7 +119,7 @@ public class Swerve {
             }
         }
         
-        return calcAngleSpeed;
+        return -calcAngleSpeed;
     }
 
     public void resetEncoder(){

@@ -213,7 +213,7 @@ public class Drive {
             double C = angleVectorY + rotationVectorY;
             double D = angleVectorY - rotationVectorY;
             frontLeftSwerveSpeed = Math.sqrt(Math.pow(A, 2.0) + Math.pow(C, 2.0));
-            frontLeftSwerveAngle = 180;//Math.atan2(A, C) * 180 / Math.PI;
+            frontLeftSwerveAngle = Math.atan2(A, C) * 180 / Math.PI;
             backLeftSwerveSpeed = Math.sqrt(Math.pow(A, 2.0) + Math.pow(D, 2.0));
             backLeftSwerveAngle = Math.atan2(A, D) * 180 / Math.PI;
             frontRightSwerveSpeed = Math.sqrt(Math.pow(B, 2.0) + Math.pow(C, 2.0));
@@ -258,6 +258,7 @@ public class Drive {
         SmartDashboard.putNumber("fr Angle", frontRight.getEncoder());
         SmartDashboard.putNumber("bl Angle", backLeft.getEncoder());
         SmartDashboard.putNumber("br Angle", backRight.getEncoder());
+        SmartDashboard.putNumber("gyroAngle", gyroAngle);
 
         SmartDashboard.putNumber("fl delta", frontLeftSwerveAngle - frontLeft.getEncoder());
         SmartDashboard.putNumber("error", frontLeft.anglePID.getPositionError());
