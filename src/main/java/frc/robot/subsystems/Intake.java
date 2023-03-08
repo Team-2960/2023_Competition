@@ -1,7 +1,5 @@
 package frc.robot.subsystems;
 
-import com.ctre.phoenix.motorcontrol.TalonFXControlMode;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -16,12 +14,20 @@ public class Intake {
     private CANSparkMax mIntake;
     private CANSparkMax mFlapperWheels;
     private CANSparkMax mConveyor;
+
     private DoubleSolenoid sIntake;
     private DigitalInput gamePiecePhotoEye;
+
     private boolean intakeIn;
     private boolean conveyorOn;
-    private double conveyorPos;
-    private Timer intakeTimer;
+
+    private Timer conveyorTime;
+
+    public enum IntakeDirection{
+        FORWARD,
+        OFF,
+        REVERSE
+    }
 
     private static Intake intake;
 
@@ -33,14 +39,17 @@ public class Intake {
     }
     
     Intake(){
+        //Initalize Components
         mIntake = new CANSparkMax(Constants.mIntakeWheels, MotorType.kBrushless);
         mFlapperWheels = new CANSparkMax(Constants.mFlapperWheels, MotorType.kBrushless);
         mConveyor = new CANSparkMax(Constants.mConveyor, MotorType.kBrushless);
         sIntake = new DoubleSolenoid(PneumaticsModuleType.REVPH, Constants.sIntakeID[0], Constants.sIntakeID[1]);
         gamePiecePhotoEye = new DigitalInput(Constants.gamePiecePhotoeye);
+
+        //Initalize State Variables
         intakeIn = true;
         conveyorOn = false;
-        intakeTimer = new Timer();
+        conveyorTime = new Timer();
     }
 
     /**
@@ -57,54 +66,51 @@ public class Intake {
      */
     public void setIntakeState(Value val){  
         sIntake.set(val);
-        if(val==Value.kForward){
-            intakeIn = true;
 
-        }else{
-            intakeIn = false;
-        }
-
-    }
-    public void setIntakeState2(boolean state){
-        if(state){
-            sIntake.set(Value.kForward);
-            intakeIn = true;
-        }else{
-            sIntake.set(Value.kReverse);
-            intakeIn = false;
-        }
-        intakeTimer.reset();
-        intakeTimer.start();
-    }
-    public void checkIntakeTimer(){
-        if(intakeTimer.get()>.25){
-            sIntake.set(Value.kOff);
-            intakeTimer.reset();
-            intakeTimer.stop();
-        }
+        //Is the intake in? 
+        if(val==Value.kForward) intakeIn = true;
+        else intakeIn = false;
     }
 
-    public void setIntakeForward(boolean state){
-        if(state){
+    /**
+     * Sets all intake necessary components
+     * @param dir the direction the intake system should run
+     */
+    public void setIntakeIntegrated(IntakeDirection dir){
+        //Determine intake direction
+        if(dir == IntakeDirection.FORWARD){
             setIntakeSpeed(1);
             setFlappySpeed(1);
             setConveyorSpeed(1);
+
+            conveyorTime.restart();
             conveyorOn = true;
-            conveyorPos = mConveyor.getEncoder().getPosition();
+        }else if(dir == IntakeDirection.REVERSE){
+            setIntakeSpeed(-1);
+            setFlappySpeed(-1);
+            setConveyorSpeed(-1);
+            conveyorOn = false;
         }else{
+            setIntakeSpeed(0);
+            setFlappySpeed(0);
+        }
+
+        //Check if intake is in
+        //if so, turn off intake and flappers
+        if(intakeIn){
             setIntakeSpeed(0);
             setFlappySpeed(0);
         }
     }
 
+    /**
+     * Check if conveyor should keep running 
+     * after intaking a game piece
+     */
     public void checkConveyorState(){
-        if(conveyorOn){
-           if (getGamePiecePhotoeye()){
+        if(conveyorOn && (getGamePiecePhotoeye() || conveyorTime.get() > .5)){
             setConveyorSpeed(0);
-           }
-           else if((mConveyor.getEncoder().getPosition()-conveyorPos)>2000){
-            setConveyorSpeed(0);
-           }
+            conveyorTime.stop();
         }
     }
 
@@ -122,22 +128,18 @@ public class Intake {
      */
     public void setConveyorSpeed(double speed){
         mConveyor.set(speed);
-        if(speed == 0){
-            conveyorOn = false;
-        }
+        if(speed == 0) conveyorOn = false;
     }
-    public void checkIntakePosition(){
-        if(intakeIn){
-            setFlappySpeed(0);
-            setIntakeSpeed(0);
-        }
-    }
-    
+
     public Value getIntakePos(){
         return sIntake.get();
     }
    
     public boolean getGamePiecePhotoeye(){
-        return gamePiecePhotoEye.get();
+        return !gamePiecePhotoEye.get();
+    }
+
+    public void periodic(){
+        checkConveyorState();
     }
 }

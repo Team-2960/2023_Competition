@@ -45,4 +45,24 @@ public class Constants {
     //MISC CAN
     public final static int PneumHub = 18;
     public final static int PDH = 19;
+
+    //ELEVATOR ENCORDER POSTIONS
+    public final static double elevatorFwdEncLimit = 50000;
+    public final static double elevatorRevEncLimit = -1000;
+    public final static double home = 0;
+    public final static double level1 = 7000;
+    public final static double level2 = 20000;
+    public final static double level3 = 30000; 
+    public final static double bump = 500;
+    public final static double tolerance = 100;
+
+    //ELEVATOR PID 
+    public final static double kElevRateP = 0.0005;
+    public final static double kElevRateI = 0;
+    public final static double kElevRateD = 0;
+
+    //ELEVATOR RATE CONTROL
+    public final static double elevMaxRate = 10000;
+    public final static double elevRampUp = 40000;
+    public final static double elevRampDown = 10;
 }
