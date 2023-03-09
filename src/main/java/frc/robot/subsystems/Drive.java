@@ -67,13 +67,13 @@ public class Drive {
     private double angleRateVector;
 
     //Sensor Vars
-    private static AHRS navX;
+    public static AHRS navX;
     private double gyroAngle;
 
     //Autonomous Variables
 
     //Odometry Vars
-    public swerveOdometry so;
+    public static swerveOdometry so;
     private double prevTime;
     private Timer autoTimer;
 
@@ -156,6 +156,17 @@ public class Drive {
         autoTimer = new Timer();
     }
 
+    //Reduces The Angle TO 0 to 360
+    public static double reduceAngle(double gyroAngle) {
+        while (gyroAngle > 360) {
+          gyroAngle = gyroAngle - 360;
+        }
+        while (gyroAngle < 0) {
+          gyroAngle = gyroAngle + 360;
+        }
+        return gyroAngle;
+      }
+
     //Set the motors to break mode
     public void breakMode() {
         frontRight.setDriveModeBrake();
@@ -189,6 +200,13 @@ public class Drive {
         double currTime = autoTimer.get();
         double timeStep = currTime - prevTime;
         prevTime = currTime;
+
+
+        SmartDashboard.putNumber("Robot X Position", drive.getRobotPos().getX());
+        SmartDashboard.putNumber("Robot Y Position", drive.getRobotPos().getY());
+        SmartDashboard.putNumber("Robot Angle Position", drive.getRobotPos().getRotation().getDegrees());
+
+
         
         // Front left module state
         SwerveModuleState fl = frontLeft.getState();
@@ -198,7 +216,8 @@ public class Drive {
         SwerveModuleState bl = backLeft.getState();
         // Back right module state
         SwerveModuleState br = backRight.getState();
-        so.updateOdometry(fl, fr, bl, br, navX.getAngle(), timeStep);
+        double tempAngle = reduceAngle(navX.getAngle());
+        so.updateOdometry(fl, fr, bl, br, tempAngle, timeStep);
     }
 
     //Set the swerve vectors (Rotation and Velocity)
@@ -264,7 +283,7 @@ public class Drive {
         SmartDashboard.putNumber("error", frontLeft.anglePID.getPositionError());
         SmartDashboard.putNumber("tar pos", frontLeftSwerveAngle);
         SmartDashboard.putNumber("fl speed", frontLeft.anglePIDCalcABS(frontLeftSwerveAngle));
-        //updateOdometry();
+        updateOdometry();
         sanitizeAngle();
         frontLeft.setSpeed(frontLeftSwerveSpeed/75, frontLeft.anglePIDCalcABS(frontLeftSwerveAngle));
         frontRight.setSpeed(frontRightSwerveSpeed/75, frontRight.anglePIDCalcABS(frontRightSwerveAngle));
@@ -284,7 +303,8 @@ public class Drive {
 
     //Update the speeds for autnomous movement
     public void autonUpdate() {
-        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(velY, velX, omega, Rotation2d.fromDegrees(-navX.getYaw()));
+        updateOdometry();
+        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(velY, velX, omega, Rotation2d.fromDegrees(navX.getYaw()));
         SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(speeds);
     
         // Front left module state
@@ -298,7 +318,12 @@ public class Drive {
     
         // Back right module state
         SwerveModuleState frontLeftState = moduleStates[3];
-          
+        
+        SmartDashboard.putNumber("fl Angle tar", frontLeftState.angle.getDegrees());
+        SmartDashboard.putNumber("fl Angle Error", frontLeft.anglePID.getPositionError());
+        SmartDashboard.putNumber("bl Angle", backLeft.getEncoder());
+        SmartDashboard.putNumber("br Angle", backRight.getEncoder());
+
         frontRight.modState(frontRightState);
         frontLeft.modState(frontLeftState);
         backRight.modState(backRightState);

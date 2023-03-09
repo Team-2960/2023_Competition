@@ -10,6 +10,18 @@ public class Constants {
     //SWERVE-AUTON
     public final static double velocityToMeters = (10/8.16*Math.PI*3.9*0.0254)/(2048);
 
+    //Theta Thresholding
+    public static double thresholdT1 = 0.05;
+    public static double tVel1 = 0;
+
+    public static double thresholdT2 = 0.2;
+    public static double tVel2 = 0.7;
+
+    public static double thresholdT3 = 0.7;
+    public static double tVel3 = 2.1;
+
+    public static double tVelOutside = 2.1;
+
     //PhotoEyes
     public final static int gamePiecePhotoeye = 0;
     public final static int LowerElevatorPhotoeye = 1;
@@ -61,25 +73,25 @@ public class Constants {
     public static double dPFL = 0.0008;
     public static double dIFL = 0;
     public static double dDFL = 0;
-    public static double aPFL = 0.008;
+    public static double aPFL = 0.004;
     public static double aIFL = 0.0;
     public static double aDFL = 0.00;
     public static double dPFR = 0.0008;
     public static double dIFR = 0;
     public static double dDFR = 0;
-    public static double aPFR = 0.008;
+    public static double aPFR = 0.004;
     public static double aIFR = 0.0;
     public static double aDFR = 0.00;
     public static double dPBL = 0.0008;
     public static double dIBL = 0;
     public static double dDBL = 0;
-    public static double aPBL = 0.008;
+    public static double aPBL = 0.004;
     public static double aIBL = 0.0;
     public static double aDBL = 0.00;
     public static double dPBR = 0.0008;//0.0008
     public static double dIBR = 0;
     public static double dDBR = 0;
-    public static double aPBR = 0.008;//0.007
+    public static double aPBR = 0.004;//0.007
     public static double aIBR = 0.0;
     public static double aDBR = 0.00;
 
@@ -89,4 +101,6 @@ public class Constants {
     public static double blHome = -203.64+90;//-73.81;
     public static double brHome = -176.74-180+90;//-157.03;
     public static double modLoc = 11.5  * 0.0254;
+
+    //
 }

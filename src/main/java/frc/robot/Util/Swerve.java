@@ -97,7 +97,6 @@ public class Swerve {
     }
 
     public double anglePIDCalcABS(double angle){
-        angle += 180;
         //angle *= 180/Math.PI;
         double calcAngleSpeed = 0;
         
@@ -168,8 +167,8 @@ public class Swerve {
             setMetersPerSec(-state.speedMetersPerSecond);
         }else{
             state.angle.getDegrees();
-        setAngleSpeed(anglePIDCalcABS(curAngle));
-        setMetersPerSec(state.speedMetersPerSecond);
+            setAngleSpeed(anglePIDCalcABS(curAngle));
+            setMetersPerSec(state.speedMetersPerSecond);
         }
     }
 

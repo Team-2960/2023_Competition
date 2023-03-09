@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import java.io.IOException;
+
 import javax.print.attribute.standard.Compression;
 
 import com.ctre.phoenixpro.hardware.TalonFX;
@@ -13,6 +15,9 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.Auton.maker;
 import frc.robot.subsystems.*;
 
 /**
@@ -28,6 +33,7 @@ public class Robot extends TimedRobot {
   private Intake intake;
   private ElevatorClaw elevatorClaw;
   private Drive drive;
+  private Command autonCommand;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -49,13 +55,25 @@ public class Robot extends TimedRobot {
   @Override
   public void robotPeriodic() {
     elevatorClaw.periodic();
+    CommandScheduler.getInstance().run();
+    drive.updateOdometry();
   }
 
   @Override
-  public void autonomousInit() {}
+  public void autonomousInit() {
+    drive.breakMode();
+    try{
+      autonCommand = new maker("lol this does nothing");
+    }catch (IOException e){
+      e.printStackTrace();
+    }
+    if(autonCommand != null) autonCommand.schedule();
+  }
 
   @Override
-  public void autonomousPeriodic() {}
+  public void autonomousPeriodic() {
+    drive.autonUpdate();
+  }
 
   @Override
   public void teleopInit() {}
