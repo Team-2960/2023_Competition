@@ -193,33 +193,33 @@ public class OI {
          drive.printCANCoderFR();
         
         // Back button is close claw, start button is open claw
-        if (testJoy1.getRawButton(7)) {
+        if (testJoy2.getRawButton(7)) {
             elevatorClaw.setGripperState(Value.kForward);
         }
-        if (testJoy1.getRawButton(8)) {
+        if (testJoy2.getRawButton(8)) {
             elevatorClaw.setGripperState(Value.kReverse);
         }
 
         // X button brings wrist down, Y button bings wrist up
-        if (testJoy1.getRawButton(3)) {
+        if (testJoy2.getRawButton(3)) {
             elevatorClaw.setWristState(Value.kForward);
         }
-        if (testJoy1.getRawButton(4)) {
+        if (testJoy2.getRawButton(4)) {
             elevatorClaw.setWristState(Value.kReverse);
         }
 
         // A button is stopper down, B button is stopper up
-        if (testJoy1.getRawButton(1)) {
+        if (testJoy2.getRawButton(1)) {
             elevatorClaw.setStopperState(Value.kForward);
         }
-        if (testJoy1.getRawButton(2)) {
+        if (testJoy2.getRawButton(2)) {
             elevatorClaw.setStopperState(Value.kReverse);
         }
 
-        if (testJoy2.getRawButton(3)) {
+        if (testJoy2.getRawAxis(2)>0.1) {
             intake.setIntakeState(Value.kForward);
         }
-        if (testJoy2.getRawButton(4)) {
+        if (testJoy2.getRawAxis(3)>0.1) {
             intake.setIntakeState(Value.kReverse);
         }
 

@@ -34,7 +34,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
-    //PortForwarder.add(5801, "limelight.local", 5801);
+    PortForwarder.add(5801, "limelight.local", 5801);
     oi = OI.get_Instance();
     pdp = new PowerDistribution(Constants.PDH, PowerDistribution.ModuleType.kRev);
     pdp.setSwitchableChannel(true);
@@ -42,12 +42,13 @@ public class Robot extends TimedRobot {
     intake = Intake.get_Instance();
     elevatorClaw = ElevatorClaw.get_Instance();
     drive = Drive.get_Instance();
-    ph.disable();
+    //ph.disable();
     drive.coastMode();
   }
 
   @Override
   public void robotPeriodic() {
+    elevatorClaw.periodic();
   }
 
   @Override
@@ -64,7 +65,7 @@ public class Robot extends TimedRobot {
     oi.regularOI();
     drive.periodicTele();
     //oi.testOI();
-    //oi.soberOI();
+    oi.soberOI();
     intake.periodic();
     elevatorClaw.periodic();
   }

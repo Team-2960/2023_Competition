@@ -96,7 +96,8 @@ public class Intake {
             setFlappySpeed(1);
             setConveyorSpeed(1);
             conveyorOn = true;
-            conveyorTimer.restart();
+            conveyorTimer.start();
+            conveyorTimer.reset();
         }else if(dir == IntakeDirection.REVERSE){
             setIntakeSpeed(1);
             setFlappySpeed(-1);
@@ -105,18 +106,20 @@ public class Intake {
         }else{
             setIntakeSpeed(0);
             setFlappySpeed(0);
+            if(!conveyorOn){
+                setConveyorSpeed(0);
+            }
         }
     }
 
     public void checkConveyorState(){
         if(conveyorOn){
            if (getGamePiecePhotoeye()){
-            setConveyorSpeed(0);
             conveyorOn =  false;
            }
            else if(conveyorTimer.get() > 1.5){
-            setConveyorSpeed(0);
             conveyorOn = false;
+            conveyorTimer.stop();
            }
         }
     }
