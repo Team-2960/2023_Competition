@@ -150,8 +150,8 @@ public class ElevatorClaw {
     public void setElevatorPosition(double position){
         double currentPos = (mLElevator.getSelectedSensorPosition() - mRElevator.getSelectedSensorPosition())/2;
         double diff = currentPos - position;
-        double far = 2000;
-        double tolerance = 0.5;
+        double far = 10000;
+        double tolerance = 500;
         double direction = 1;
         if(diff > 0) direction = -1;
         if(elevatorTarget < 1000 && currentPos < 1000){
@@ -162,10 +162,10 @@ public class ElevatorClaw {
             currentState = targetState;
         }
         else if(Math.abs(diff) >= far){
-            calcElevatorSpeed(3500 * direction);
+            calcElevatorSpeed(5000 * direction);
         }
         else if(Math.abs(diff) < far){
-            calcElevatorSpeed(200 * direction);
+            calcElevatorSpeed(500 * direction);
         }
     } 
     public void resetElevator(){
