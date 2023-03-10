@@ -1,8 +1,7 @@
 package frc.robot;
 
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import frc.robot.Constants;
+import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.ElevatorClaw;
 import frc.robot.subsystems.Intake;
@@ -77,8 +76,56 @@ public class OI {
                     Math.sqrt(Math.pow(Math.abs(driverControl.getRawAxis(0)), 2)
                             + Math.pow(Math.abs(driverControl.getRawAxis(1)), 2)),
                     driverControl.getRawAxis(4) * -2);
-                    
+        //Elevator Control
+       if (operatorControl.getRawButton(1)){
+            elevatorClaw.setTargetPosition(Constants.cHome);
+        }else if(operatorControl.getRawButton(3)){
+            elevatorClaw.setTargetPosition(Constants.cLevel1);
+        }else if(operatorControl.getRawButton(4)){
+            elevatorClaw.setTargetPosition(Constants.cLevel2);
+        }else if(operatorControl.getRawButton(2)){
+            elevatorClaw.setTargetPosition(Constants.cLevel3);
+        }
+          // Back button is close claw, start button is open claw
+        if (operatorControl.getRawButton(7)) {
+            elevatorClaw.setGripperState(Value.kForward);
+        }
+        if (operatorControl.getRawButton(8)) {
+            elevatorClaw.setGripperState(Value.kReverse);
+        }
+        // X button brings wrist down, Y button bings wrist up
+        if (operatorControl.getPOV() == 270) {
+            elevatorClaw.setWristState(Value.kForward);
+        }
+        if (operatorControl.getPOV() == 90) {
+            elevatorClaw.setWristState(Value.kReverse);
+        }
+
+        // A button is stopper down, B button is stopper up
+        if (operatorControl.getPOV() == 0) {
+            elevatorClaw.setStopperState(Value.kForward);
+        }
+        if (operatorControl.getPOV() == 180) {
+            elevatorClaw.setStopperState(Value.kReverse);
+        }
+
+        if (operatorControl.getRawButton(5)) {
+            intake.setIntakeState(Value.kForward);
+        }
+        if (operatorControl.getRawButton(6)) {
+            intake.setIntakeState(Value.kReverse);
+        }
+
+        if (operatorControl.getRawAxis(2)>0.1){
+            intake.setIntakeAll(Intake.IntakeDirection.FORWARD);
+        }else if(operatorControl.getRawAxis(3)>0.1){
+            intake.setIntakeAll(Intake.IntakeDirection.REVERSE);
+        }
+        else {
+            intake.setIntakeAll(Intake.IntakeDirection.OFF);
+        }          
     }
+    
 
 
 
@@ -231,7 +278,7 @@ public class OI {
         else {
             intake.setIntakeAll(Intake.IntakeDirection.OFF);
         }
-
+/* 
         if (testJoy1.getRawButton(1)){
             elevatorClaw.setElevatorPosition(Constants.cHome);
         }
@@ -240,7 +287,18 @@ public class OI {
             elevatorClaw.setElevatorPosition(Constants.cLevel3);
             
         }
-
+*/
+       if (testJoy1.getRawButton(1)){
+            elevatorClaw.setElevatorPosition(Constants.cHome);
+        }else if (testJoy1.getRawButton(2)){
+            elevatorClaw.setElevatorPosition(Constants.cLevel1);
+        }else if(testJoy1.getRawButton(3)){
+            elevatorClaw.setElevatorPosition(Constants.cLevel2);
+        }else if(testJoy1.getRawButton(4)){
+            elevatorClaw.setElevatorPosition(Constants.cLevel3);
+        }else{
+            elevatorClaw.calcElevatorSpeed(0);
+        }
 
     }
 

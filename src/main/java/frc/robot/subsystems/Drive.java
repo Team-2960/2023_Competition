@@ -288,7 +288,6 @@ public class Drive {
 
     //Called instead of the periodic function
     public void periodicTele() {
-
         updateOdometry();
         sanitizeAngle();
         frontLeft.setSpeed(frontLeftSwerveSpeed/75, frontLeft.anglePIDCalcABS(frontLeftSwerveAngle));

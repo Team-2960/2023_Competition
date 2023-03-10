@@ -36,6 +36,9 @@ public class ElevatorClaw {
     private double target = 0;
 
     private PIDController pElevatorPID;
+    private PIDController elvSpeedPID;
+
+    private double elevatorTarget = 0;
 
     public enum ElevatorState{
         HOME,
@@ -52,6 +55,8 @@ public class ElevatorClaw {
         mLElevator= new TalonFX(Constants.mLElevator, "Default Name");
         //mLElevator.setInverted(true);
         pElevatorPID = new PIDController(Constants.kElevatorp,Constants.kElevatori,Constants.kElevatord);
+        elvSpeedPID = new PIDController(Constants.elvSpeedP, Constants.elvSpeedI, Constants.elvSpeedD);
+
         sGripper= new DoubleSolenoid(18,PneumaticsModuleType.REVPH, Constants.sGripperID[0], Constants.sGripperID[1]);
         sWrist= new DoubleSolenoid(18,PneumaticsModuleType.REVPH, Constants.sWristID[0], Constants.sWristID[1]);
         sStopper= new DoubleSolenoid(18,PneumaticsModuleType.REVPH, Constants.sStopperID[0], Constants.sStopperID[1]);
@@ -105,12 +110,20 @@ public class ElevatorClaw {
         mLElevator.set(ControlMode.PercentOutput, speed);
         mRElevator.set(ControlMode.PercentOutput, speed);
    0 }*/
-   /*  public void calcElevatorSpeed(double speed){
-        double encoderValue =  (mLElevator.getSelectedSensorVelocity()+mRElevator.getSelectedSensorVelocity())/2;
-        double calcSpeed = pElevatorPID.calculate(encoderValue, speed);
+     public void calcElevatorSpeed(double speed){
+
+        double baseSpeed = feedForwardElevator(speed);
+
+        double encoderValue =  (mLElevator.getSelectedSensorVelocity() - mRElevator.getSelectedSensorVelocity())/2;
+        double calcSpeed = baseSpeed + elvSpeedPID.calculate(encoderValue, speed);
         SmartDashboard.putNumber("calculatedSpeed", calcSpeed);
-        setElevator(calcSpeed);
+        setElevator(-calcSpeed);
     }
+
+    public double feedForwardElevator(double tarVelocity){
+        return tarVelocity * 0.0000573171 + 0.06;
+    }
+    /* 
     public void setElevatorState(ElevatorState position){
         double targetPosition = 0;
         targetState = position;
@@ -130,25 +143,35 @@ public class ElevatorClaw {
             currentState = ElevatorState.MOVING;
             setElevatorPosition(targetPosition);
         }
+    }*/
+    public void setTargetPosition(double target){
+        elevatorTarget = target;
     }
     public void setElevatorPosition(double position){
-        double currentPos = mRElevator.getSelectedSensorPosition();
+        double currentPos = (mLElevator.getSelectedSensorPosition() - mRElevator.getSelectedSensorPosition())/2;
         double diff = currentPos - position;
-        double far = 10;
+        double far = 2000;
         double tolerance = 0.5;
         double direction = 1;
-        if(diff < 0) direction = -1;
-        if(Math.abs(diff) <= tolerance){
+        if(diff > 0) direction = -1;
+        if(elevatorTarget < 1000 && currentPos < 1000){
+            setElevator(0);
+        }
+        else if(Math.abs(diff) <= tolerance){
             calcElevatorSpeed(0);
             currentState = targetState;
         }
         else if(Math.abs(diff) >= far){
-            calcElevatorSpeed(1000 * direction);
+            calcElevatorSpeed(3500 * direction);
         }
         else if(Math.abs(diff) < far){
             calcElevatorSpeed(200 * direction);
         }
-    }*/
+    } 
+    public void resetElevator(){
+        mRElevator.setSelectedSensorPosition(0);
+        mLElevator.setSelectedSensorPosition(0);
+    }
 
 
     
@@ -161,11 +184,12 @@ public class ElevatorClaw {
         SmartDashboard.putNumber("ElevatorTargetPos", tar);
         setElevator(-speed);
     }
+    /* 
     public void setElevatorPosition(double targetPosition){
             target = targetPosition;
             enablePID = true;
     }
-
+*/
 
     //Elevator move conditions (stopper)
     public void checkStopperPosition(){
@@ -259,13 +283,17 @@ public class ElevatorClaw {
         }
     }
     public void periodic(){
+        setElevatorPosition(elevatorTarget);
         //Right elevator is negative
         SmartDashboard.putNumber("elevatorEncoder1", mLElevator.getSelectedSensorVelocity());
         SmartDashboard.putNumber("elevatorEncoder2", mRElevator.getSelectedSensorVelocity());
         SmartDashboard.putNumber("elevatorPosition1", mLElevator.getSelectedSensorPosition());
         SmartDashboard.putNumber("elevatorPosition2", mRElevator.getSelectedSensorPosition());
         if (enablePID){
-            calcPID(target);
+        //    calcPID(target);
         }
+    if(!lowerPhotoEye.get()){
+        resetElevator();
+    }
     }
 }

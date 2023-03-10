@@ -63,11 +63,16 @@ public class Constants {
     public final static double kElevatori = 0;
     public final static double kElevatord = 0;
 
+    //Elevator Speed PID
+    public final static double elvSpeedP = 0.000017;
+    public final static double elvSpeedI= 0;
+    public final static double elvSpeedD = 0;
+
     //Elevator Level Positions
-    public final static double cHome = 1000;
-    public final static double cLevel1 = 10000;
-    public final static double cLevel2 = 20000;
-    public final static double cLevel3 = 40000;
+    public final static double cHome = -100;
+    public final static double cLevel1 = 12000;
+    public final static double cLevel2 = 22000;
+    public final static double cLevel3 = 46000;
 
     //PID Constants Swerve
     public static double dPFL = 0.0008;
