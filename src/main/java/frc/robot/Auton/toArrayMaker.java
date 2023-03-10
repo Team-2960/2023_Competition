@@ -152,6 +152,10 @@ public class toArrayMaker  extends CommandBase {
         SmartDashboard.putNumber("curr Theta", currTheta);
 
         double currPosTheta =Math.toRadians(listOfCoords.get(currTarIndex).getTheta());
+        double currPosPosTheta = Math.toRadians(listOfCoords.get(currTarIndex).getTheta() - 360);
+        double currPosNegTheta = Math.toRadians(listOfCoords.get(currTarIndex).getTheta() + 360);
+        
+
         SmartDashboard.putNumber("currPos", currPosTheta);
 
         double dTheta = currPosTheta - currTheta;
