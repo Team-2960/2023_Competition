@@ -8,7 +8,7 @@ public class Constants {
     public final static int testJoy2 = 3;
 
     //SWERVE-AUTON
-    public final static double velocityToMeters = (10/8.16*Math.PI*3.9*0.0254)/(2048);
+    public final static double velocityToMeters = (10/8.14*Math.PI*3.9*0.0254)/(2048);
 
     //Theta Thresholding
     public static double thresholdT1 = 0.05;
@@ -59,15 +59,15 @@ public class Constants {
     public final static int PDH = 19;
 
     //Elevator PID
-    public final static double kElevatorp = .5;
+    public final static double kElevatorp = .00006;
     public final static double kElevatori = 0;
     public final static double kElevatord = 0;
 
-    //Level Positions
-    public final static double cHome = 0;
-    public final static double cLevel1 = 10;
-    public final static double cLevel2 = 20;
-    public final static double cLevel3 = 40;
+    //Elevator Level Positions
+    public final static double cHome = 1000;
+    public final static double cLevel1 = 10000;
+    public final static double cLevel2 = 20000;
+    public final static double cLevel3 = 40000;
 
     //PID Constants Swerve
     public static double dPFL = 0.0008;
@@ -100,7 +100,7 @@ public class Constants {
     public static double frHome = -275.8+90;//-269.19;
     public static double blHome = -203.64+90;//-73.81;
     public static double brHome = -176.74-180+90;//-157.03;
-    public static double modLoc = 11.5  * 0.0254;
+    public static double modLoc = 12  * 0.0254;
 
     //
 }

@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.fasterxml.jackson.databind.cfg.ConstructorDetector.SingleArgConstructor;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
@@ -37,7 +38,7 @@ public class Intake {
         return intake;
     }
     
-    Intake(){
+    private Intake(){
         mIntake = new CANSparkMax(Constants.mIntakeWheels, MotorType.kBrushless);
         mFlapperWheels = new CANSparkMax(Constants.mFlapperWheels, MotorType.kBrushless);
         mConveyor = new CANSparkMax(Constants.mConveyor, MotorType.kBrushless);
@@ -47,6 +48,8 @@ public class Intake {
         conveyorOn = false;
         intakeTimer = new Timer();
         conveyorTimer = new Timer();
+        //TODO: check value
+        sIntake.set(Value.kReverse);
     }
 
     /**

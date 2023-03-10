@@ -66,7 +66,7 @@ public class OI {
 
         }
 
-        done = Math.abs(done - 360);
+        done = Math.abs(done - 360) -180;
         return done;
     }
 
@@ -76,7 +76,7 @@ public class OI {
         drive.setVector(driveAngle(driverControl.getRawAxis(0), driverControl.getRawAxis(1)),
                     Math.sqrt(Math.pow(Math.abs(driverControl.getRawAxis(0)), 2)
                             + Math.pow(Math.abs(driverControl.getRawAxis(1)), 2)),
-                    driverControl.getRawAxis(4) * 2);
+                    driverControl.getRawAxis(4) * -2);
                     
     }
 
@@ -86,7 +86,7 @@ public class OI {
 
         // BL
 
-        if (testJoy1.getRawButton(1)) {
+       /*  if (testJoy1.getRawButton(1)) {
             drive.setBLDrive(0.2);
         } else {
             drive.setBLDrive(0);
@@ -124,7 +124,7 @@ public class OI {
             drive.setBRDrive(0.2);
         } else {
             drive.setBRDrive(0);
-        }
+        } */
 
         // PRINT CANCODERS
         /*
@@ -231,6 +231,17 @@ public class OI {
         else {
             intake.setIntakeAll(Intake.IntakeDirection.OFF);
         }
+
+        if (testJoy1.getRawButton(1)){
+            elevatorClaw.setElevatorPosition(Constants.cHome);
+        }
+
+        if (testJoy1.getRawButton(2)){
+            elevatorClaw.setElevatorPosition(Constants.cLevel3);
+            
+        }
+
+
     }
 
 }
