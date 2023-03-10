@@ -16,6 +16,7 @@ public class ElevatorClaw {
 
     //Instance
     private static ElevatorClaw elevatorClaw;
+
     //MOTORS
     private TalonFX mRElevator;
     private TalonFX mLElevator;
@@ -30,6 +31,9 @@ public class ElevatorClaw {
     private Timer gripperTimer;
     private Timer wristTimer;
     private Timer stopperTimer;
+
+    private boolean enablePID = false;
+    private double target = 0;
 
     private PIDController pElevatorPID;
 
@@ -46,6 +50,7 @@ public class ElevatorClaw {
     private ElevatorClaw (){
         mRElevator= new TalonFX(Constants.mRElevator, "Default Name");
         mLElevator= new TalonFX(Constants.mLElevator, "Default Name");
+        //mLElevator.setInverted(true);
         pElevatorPID = new PIDController(Constants.kElevatorp,Constants.kElevatori,Constants.kElevatord);
         sGripper= new DoubleSolenoid(18,PneumaticsModuleType.REVPH, Constants.sGripperID[0], Constants.sGripperID[1]);
         sWrist= new DoubleSolenoid(18,PneumaticsModuleType.REVPH, Constants.sWristID[0], Constants.sWristID[1]);
@@ -54,7 +59,7 @@ public class ElevatorClaw {
         upperPhotoEye = new DigitalInput(Constants.UpperElevatorPhotoeye);
         currentState = ElevatorState.HOME;
         targetState = ElevatorState.HOME;
-        
+        mLElevator.setSelectedSensorPosition(0);
     }
 
     public static ElevatorClaw get_Instance(){
@@ -99,8 +104,8 @@ public class ElevatorClaw {
         }
         mLElevator.set(ControlMode.PercentOutput, speed);
         mRElevator.set(ControlMode.PercentOutput, speed);
-    }*/
-    public void calcElevatorSpeed(double speed){
+   0 }*/
+   /*  public void calcElevatorSpeed(double speed){
         double encoderValue =  (mLElevator.getSelectedSensorVelocity()+mRElevator.getSelectedSensorVelocity())/2;
         double calcSpeed = pElevatorPID.calculate(encoderValue, speed);
         SmartDashboard.putNumber("calculatedSpeed", calcSpeed);
@@ -143,7 +148,25 @@ public class ElevatorClaw {
         else if(Math.abs(diff) < far){
             calcElevatorSpeed(200 * direction);
         }
+    }*/
+
+
+    
+    public void calcPID(double tar){
+        double currentPos = mLElevator.getSelectedSensorPosition();
+        double speed;
+        speed = pElevatorPID.calculate(currentPos,tar);
+        SmartDashboard.putNumber("ElevatorPIDspeed", speed);
+        SmartDashboard.putNumber("ElevatorCurrentPos", currentPos);
+        SmartDashboard.putNumber("ElevatorTargetPos", tar);
+        setElevator(-speed);
     }
+    public void setElevatorPosition(double targetPosition){
+            target = targetPosition;
+            enablePID = true;
+    }
+
+
     //Elevator move conditions (stopper)
     public void checkStopperPosition(){
         if(targetState == ElevatorState.HOME && currentState == ElevatorState.HOME){
@@ -241,5 +264,8 @@ public class ElevatorClaw {
         SmartDashboard.putNumber("elevatorEncoder2", mRElevator.getSelectedSensorVelocity());
         SmartDashboard.putNumber("elevatorPosition1", mLElevator.getSelectedSensorPosition());
         SmartDashboard.putNumber("elevatorPosition2", mRElevator.getSelectedSensorPosition());
+        if (enablePID){
+            calcPID(target);
+        }
     }
 }
