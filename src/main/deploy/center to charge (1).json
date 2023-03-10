@@ -1,11 +1,23 @@
 [
     {
-        "size": 1
+        "size": 3
     },
     {
         "x": 1,
         "y": 1,
-        "theta": 0,
+        "theta": 180,
+        "tolerance": 0.2
+    },
+    {
+        "x": 0,
+        "y": 0,
+        "theta": 180,
+        "tolerance": 0.2
+    },
+    {
+        "x": -1,
+        "y": 0,
+        "theta": 180,
         "tolerance": 0.2
     }
 ]

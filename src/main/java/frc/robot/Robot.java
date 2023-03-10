@@ -54,9 +54,12 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
-    elevatorClaw.periodic();
     CommandScheduler.getInstance().run();
+    /*
+    elevatorClaw.periodic();
     drive.updateOdometry();
+    drive.putNavX();
+    */
   }
 
   @Override
@@ -89,7 +92,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+    drive.coastMode();
+  }
 
   @Override
   public void disabledPeriodic() {}

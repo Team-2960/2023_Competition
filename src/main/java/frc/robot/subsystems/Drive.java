@@ -114,6 +114,7 @@ public class Drive {
         navX = new AHRS(SPI.Port.kMXP, (byte) 200);
         navX.calibrate();
         navX.resetDisplacement();
+        //navX.setAngleAdjustment(180);
 
         //Construct PID's for Swerve
         PIDDFL = new PIDController(Constants.dPFL, Constants.dIFL, Constants.dDFL);
@@ -142,10 +143,10 @@ public class Drive {
         backRight.resetDriveEnc();
 
         //Construct Kinematics
-        m_frontLeftLocation = new Translation2d(-Constants.modLoc, -Constants.modLoc);
-        m_frontRightLocation = new Translation2d(Constants.modLoc, -Constants.modLoc);
-        m_backLeftLocation = new Translation2d(-Constants.modLoc, Constants.modLoc);
-        m_backRightLocation = new Translation2d(Constants.modLoc, Constants.modLoc);
+        m_frontLeftLocation = new Translation2d(Constants.modLoc, Constants.modLoc);
+        m_frontRightLocation = new Translation2d(-Constants.modLoc, Constants.modLoc);
+        m_backLeftLocation = new Translation2d(Constants.modLoc, -Constants.modLoc);
+        m_backRightLocation = new Translation2d(-Constants.modLoc, -Constants.modLoc);
 
         m_kinematics = new SwerveDriveKinematics(
             m_frontLeftLocation, m_frontRightLocation, m_backLeftLocation, m_backRightLocation);
@@ -165,7 +166,11 @@ public class Drive {
           gyroAngle = gyroAngle + 360;
         }
         return gyroAngle;
-      }
+    }
+
+    public void putNavX(){
+        SmartDashboard.putNumber("pitch", navX.getRoll());
+    }
 
     //Set the motors to break mode
     public void breakMode() {
@@ -206,6 +211,17 @@ public class Drive {
         SmartDashboard.putNumber("Robot Y Position", drive.getRobotPos().getY());
         SmartDashboard.putNumber("Robot Angle Position", drive.getRobotPos().getRotation().getDegrees());
 
+                
+        SmartDashboard.putNumber("fl Angle", frontLeft.getEncoder());
+        SmartDashboard.putNumber("fr Angle", frontRight.getEncoder());
+        SmartDashboard.putNumber("bl Angle", backLeft.getEncoder());
+        SmartDashboard.putNumber("br Angle", backRight.getEncoder());
+        SmartDashboard.putNumber("gyroAngle", gyroAngle);
+
+        SmartDashboard.putNumber("PID error", frontLeft.anglePID.getPositionError());
+        SmartDashboard.putNumber("PID Target", frontLeft.anglePID.getSetpoint());
+        SmartDashboard.putNumber("fl tar pos", frontLeftSwerveAngle);
+        SmartDashboard.putNumber("fl Delta", frontLeftSwerveAngle - frontLeft.getEncoder());
 
         
         // Front left module state
@@ -216,8 +232,7 @@ public class Drive {
         SwerveModuleState bl = backLeft.getState();
         // Back right module state
         SwerveModuleState br = backRight.getState();
-        double tempAngle = reduceAngle(navX.getAngle());
-        so.updateOdometry(fl, fr, bl, br, tempAngle, timeStep);
+        so.updateOdometry(fl, fr, bl, br, navX.getAngle(), timeStep);
     }
 
     //Set the swerve vectors (Rotation and Velocity)
@@ -256,7 +271,7 @@ public class Drive {
         angleRateVector = -15 * rotationVectorX;//targetAngleRate = rotationVectorX;
         
         if(Math.abs(angleRateVector) < 3 && Math.abs(navX.getRate()) > 0.02){
-          angleRateVector = 25 * navX.getRate();
+          angleRateVector = -25 * navX.getRate();
         }
         setSwerve(angleVX, angleVY, angleRateVector);
     }
@@ -273,16 +288,7 @@ public class Drive {
 
     //Called instead of the periodic function
     public void periodicTele() {
-        SmartDashboard.putNumber("fl Angle", frontLeft.getEncoder());
-        SmartDashboard.putNumber("fr Angle", frontRight.getEncoder());
-        SmartDashboard.putNumber("bl Angle", backLeft.getEncoder());
-        SmartDashboard.putNumber("br Angle", backRight.getEncoder());
-        SmartDashboard.putNumber("gyroAngle", gyroAngle);
 
-        SmartDashboard.putNumber("fl delta", frontLeftSwerveAngle - frontLeft.getEncoder());
-        SmartDashboard.putNumber("error", frontLeft.anglePID.getPositionError());
-        SmartDashboard.putNumber("tar pos", frontLeftSwerveAngle);
-        SmartDashboard.putNumber("fl speed", frontLeft.anglePIDCalcABS(frontLeftSwerveAngle));
         updateOdometry();
         sanitizeAngle();
         frontLeft.setSpeed(frontLeftSwerveSpeed/75, frontLeft.anglePIDCalcABS(frontLeftSwerveAngle));
@@ -295,16 +301,18 @@ public class Drive {
 
     //TODO Set the Autonomous Functions to use this function
     //Set the vars that control the autonomous movement
+    /*
     public void setAutonomousSpeeds(double x, double y, double omega) {
         velY = y;
         velX = x;
         this.omega = omega;
     }
+    */
 
     //Update the speeds for autnomous movement
     public void autonUpdate() {
         updateOdometry();
-        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(velY, velX, omega, Rotation2d.fromDegrees(navX.getYaw()));
+        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(velY, velX, omega, Rotation2d.fromDegrees(-navX.getAngle()));
         SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(speeds);
     
         // Front left module state
@@ -321,7 +329,7 @@ public class Drive {
         
         SmartDashboard.putNumber("fl Angle tar", frontLeftState.angle.getDegrees());
         SmartDashboard.putNumber("fl Angle Error", frontLeft.anglePID.getPositionError());
-        SmartDashboard.putNumber("bl Angle", backLeft.getEncoder());
+        SmartDashboard.putNumber("fl Angle", frontLeft.getEncoder());
         SmartDashboard.putNumber("br Angle", backRight.getEncoder());
 
         frontRight.modState(frontRightState);

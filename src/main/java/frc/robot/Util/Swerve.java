@@ -25,6 +25,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 
 import frc.robot.Constants;
+import frc.robot.subsystems.Drive;
 
 public class Swerve {
   public TalonFX driveMotor;
@@ -154,14 +155,14 @@ public class Swerve {
     }
     public void modState(SwerveModuleState state) {
         double curPos = angleEncoder.getAbsolutePosition();
-        double posAngle = state.angle.getDegrees()+90 + 180;
-        double curAngle = state.angle.getDegrees()+90;
+        double posAngle = state.angle.getDegrees() + 180 + 90;
+        double curAngle = state.angle.getDegrees() + 90;
 
 
         double curError = Math.abs(curPos - curAngle);
         double posError = Math.abs(curPos - posAngle);
-        
-        if(posError < curError){
+
+        if(posError < curError&& false){
             state.angle.getDegrees();
             setAngleSpeed(anglePIDCalcABS(posAngle));
             setMetersPerSec(-state.speedMetersPerSecond);

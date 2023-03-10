@@ -177,8 +177,8 @@ public class toArrayMaker  extends CommandBase {
              omega = -1 * omega;
           }
         
-            drive.velX = -velX;
-            drive.velY = -velY;
+            drive.velX = velX;
+            drive.velY = velY;
             drive.omega = -omega;
 
             //INDEXING STUF
