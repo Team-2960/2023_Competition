@@ -331,7 +331,8 @@ public class ElevatorClaw {
     public void enableElevatorPID(boolean enable){
         enableElevatorPID = enable;
     }
-    public void periodic(){
+    public void periodic(){ 
+        gripperTimer.start();
         if (gripperTimer.get() > .5){
             if(enableElevatorPID){
                 setElevatorPosition(elevatorTarget);
