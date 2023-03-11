@@ -78,13 +78,17 @@ public class OI {
                     driverControl.getRawAxis(4) * -2);
         //Elevator Control
        if (operatorControl.getRawButton(1)){
-            elevatorClaw.setTargetPosition(Constants.cHome);
+            elevatorClaw.setElevatorState(ElevatorClaw.ElevatorState.HOME);
+            //elevatorClaw.setTargetPosition(Constants.cHome);
+
         }else if(operatorControl.getRawButton(3)){
-            elevatorClaw.setTargetPosition(Constants.cLevel1);
+            elevatorClaw.setElevatorState(ElevatorClaw.ElevatorState.LEVEL1);
+
         }else if(operatorControl.getRawButton(4)){
-            elevatorClaw.setTargetPosition(Constants.cLevel2);
+            elevatorClaw.setElevatorState(ElevatorClaw.ElevatorState.LEVEL2);
+            
         }else if(operatorControl.getRawButton(2)){
-            elevatorClaw.setTargetPosition(Constants.cLevel3);
+            elevatorClaw.setElevatorState(ElevatorClaw.ElevatorState.LEVEL3);
         }
           // Back button is close claw, start button is open claw
         if (operatorControl.getRawButton(7)) {

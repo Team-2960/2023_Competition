@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.math.controller.PIDController;
@@ -27,10 +28,7 @@ public class ElevatorClaw {
     //Photoeyes
     private DigitalInput lowerPhotoEye;
     private DigitalInput upperPhotoEye;
-    //Timers
-    private Timer gripperTimer;
-    private Timer wristTimer;
-    private Timer stopperTimer;
+
 
     private boolean enablePID = false;
     private double target = 0;
@@ -53,6 +51,7 @@ public class ElevatorClaw {
     private ElevatorClaw (){
         mRElevator= new TalonFX(Constants.mRElevator, "Default Name");
         mLElevator= new TalonFX(Constants.mLElevator, "Default Name");
+        setElevatorBrakeMode();
         //mLElevator.setInverted(true);
         pElevatorPID = new PIDController(Constants.kElevatorp,Constants.kElevatori,Constants.kElevatord);
         elvSpeedPID = new PIDController(Constants.elvSpeedP, Constants.elvSpeedI, Constants.elvSpeedD);
@@ -65,6 +64,7 @@ public class ElevatorClaw {
         currentState = ElevatorState.HOME;
         targetState = ElevatorState.HOME;
         mLElevator.setSelectedSensorPosition(0);
+
     }
 
     public static ElevatorClaw get_Instance(){
@@ -123,7 +123,7 @@ public class ElevatorClaw {
     public double feedForwardElevator(double tarVelocity){
         return tarVelocity * 0.0000573171 + 0.06;
     }
-    /* 
+     
     public void setElevatorState(ElevatorState position){
         double targetPosition = 0;
         targetState = position;
@@ -141,39 +141,51 @@ public class ElevatorClaw {
         }
         if(currentState != targetState){
             currentState = ElevatorState.MOVING;
-            setElevatorPosition(targetPosition);
+            setTargetPosition(targetPosition);
         }
-    }*/
+    }
     public void setTargetPosition(double target){
         elevatorTarget = target;
+        enablePID = true;
     }
     public void setElevatorPosition(double position){
+        double maxSpeed = 8500;
+        double constantRD = 0.35;
+        double rate;
         double currentPos = (mLElevator.getSelectedSensorPosition() - mRElevator.getSelectedSensorPosition())/2;
         double diff = currentPos - position;
-        double far = 10000;
         double tolerance = 500;
         double direction = 1;
+
         if(diff > 0) direction = -1;
         if(elevatorTarget < 1000 && currentPos < 1000){
             setElevator(0);
+            currentState = targetState;
         }
         else if(Math.abs(diff) <= tolerance){
             calcElevatorSpeed(0);
             currentState = targetState;
+        } else {
+            rate = Math.abs(diff)*constantRD;
+            rate = Math.min(rate,maxSpeed)*direction;
+            calcElevatorSpeed(rate);
         }
-        else if(Math.abs(diff) >= far){
+        /*else if(Math.abs(diff) >= far){
             calcElevatorSpeed(5000 * direction);
         }
         else if(Math.abs(diff) < far){
             calcElevatorSpeed(500 * direction);
-        }
+        } */
     } 
     public void resetElevator(){
         mRElevator.setSelectedSensorPosition(0);
         mLElevator.setSelectedSensorPosition(0);
     }
 
-
+    public void setElevatorBrakeMode(){
+        mRElevator.setNeutralMode(NeutralMode.Brake);
+        mLElevator.setNeutralMode(NeutralMode.Brake);
+    }
     
     public void calcPID(double tar){
         double currentPos = mLElevator.getSelectedSensorPosition();
@@ -190,6 +202,9 @@ public class ElevatorClaw {
             enablePID = true;
     }
 */
+    public boolean isElevatorAtPosition(){
+        return targetState == currentState;
+    }
 
     //Elevator move conditions (stopper)
     public void checkStopperPosition(){
@@ -206,6 +221,24 @@ public class ElevatorClaw {
             setGripperState(Value.kForward);
         }
     }
+
+    public void autoSetWristPos(){
+
+        if(targetState == ElevatorState.HOME){
+            setWristState(Value.kReverse);
+
+        }else if(targetState == ElevatorState.LEVEL1){
+            setWristState(Value.kReverse);
+
+        }else if(targetState == ElevatorState.LEVEL2){
+            setWristState(Value.kForward);
+
+        }else if(targetState == ElevatorState.LEVEL3){
+            setWristState(Value.kForward);
+        }
+    }
+
+    
 
     public Value getWristPos(){
         return sWrist.get();
@@ -231,59 +264,10 @@ public class ElevatorClaw {
         return upperPhotoEye.get();
     }
 
-    //Timers for Solenoids
-    public void setGripperState2(boolean state){
-        if(state){
-            sGripper.set(Value.kForward);
-        }else{
-            sGripper.set(Value.kReverse);
-        }
-        gripperTimer.reset();
-        gripperTimer.start();
-    }
-    public void checkGripperTimer(){
-        if(gripperTimer.get()>.25){
-            sGripper.set(Value.kOff);
-            gripperTimer.reset();
-            gripperTimer.stop();
-        }
-    }
-
-    public void setWristState2(boolean state){
-        if(state){
-            sWrist.set(Value.kForward);
-        }else{
-            sWrist.set(Value.kReverse);
-        }
-        wristTimer.reset();
-        wristTimer.start();
-    }
-    public void checkWristTimer(){
-        if(wristTimer.get()>.25){
-            sWrist.set(Value.kOff);
-            wristTimer.reset();
-            wristTimer.stop();
-        }
-    }
-
-    public void setStopperState2(boolean state){
-        if(state){
-            sStopper.set(Value.kForward);
-        }else{
-            sStopper.set(Value.kReverse);
-        }
-        stopperTimer.reset();
-        stopperTimer.start();
-    }
-    public void checkStopperTimer(){
-        if(stopperTimer.get()>.25){
-            sStopper.set(Value.kOff);
-            stopperTimer.reset();
-            stopperTimer.stop();
-        }
-    }
     public void periodic(){
         setElevatorPosition(elevatorTarget);
+        checkStopperPosition();
+        autoSetWristPos();
         //Right elevator is negative
         SmartDashboard.putNumber("elevatorEncoder1", mLElevator.getSelectedSensorVelocity());
         SmartDashboard.putNumber("elevatorEncoder2", mRElevator.getSelectedSensorVelocity());
