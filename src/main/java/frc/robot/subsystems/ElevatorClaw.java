@@ -75,7 +75,7 @@ public class ElevatorClaw {
         gripperTimer.start();
         elevatorStartPosition();
 
-
+        gripperTimer = new Timer();
     }
 
     public void elevatorStartPosition(){
