@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.Lime;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.*;
@@ -44,7 +45,7 @@ public class autoBalance extends CommandBase {
      */
     @Override
     public boolean isFinished() {
-        return timer.get() > 0.75;
+        return timer.get() > 0.75 || DriverStation.getMatchTime() > 14.5;
     }
 
     @Override

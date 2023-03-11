@@ -70,7 +70,7 @@ public class ElevatorClaw {
         mLElevator.setSelectedSensorPosition(0);
         elevatorStartPosition();
 
-
+        gripperTimer = new Timer();
     }
 
     public void elevatorStartPosition(){

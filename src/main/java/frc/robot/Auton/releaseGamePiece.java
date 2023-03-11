@@ -27,6 +27,7 @@ public class releaseGamePiece extends CommandBase {
 
     @Override
     public void initialize() {
+        timer.reset();
         timer.start();
     }
 
