@@ -3,21 +3,27 @@
         "size": 3
     },
     {
-        "x": 1,
-        "y": 1,
+        "x": 2,
+        "y": 2,
         "theta": 180,
-        "tolerance": 0.2
+        "tolerance": 0.2,
+        "isSeeApril": false
+
     },
     {
         "x": 0,
         "y": 0,
-        "theta": 180,
-        "tolerance": 0.2
+        "theta": 0,
+        "tolerance": 0.2,
+        "isSeeApril": false
+
     },
     {
-        "x": -1,
+        "x": -2,
         "y": 0,
         "theta": 180,
-        "tolerance": 0.2
+        "tolerance": 0.2,
+        "isSeeApril": false
+
     }
 ]

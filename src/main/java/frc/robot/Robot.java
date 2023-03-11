@@ -50,26 +50,26 @@ public class Robot extends TimedRobot {
     drive = Drive.get_Instance();
     //ph.disable();
     drive.coastMode();
-  }
-
-  @Override
-  public void robotPeriodic() {
-    CommandScheduler.getInstance().run();
-    
-    elevatorClaw.periodic();
-    drive.updateOdometry();
-    drive.putNavX();
-    
-  }
-
-  @Override
-  public void autonomousInit() {
-    drive.breakMode();
     try{
       autonCommand = new maker("lol this does nothing");
     }catch (IOException e){
       e.printStackTrace();
     }
+  }
+
+  @Override
+  public void robotPeriodic() {
+    CommandScheduler.getInstance().run();
+    /*
+    elevatorClaw.periodic();
+    drive.updateOdometry();
+    drive.putNavX();
+    */
+  }
+
+  @Override
+  public void autonomousInit() {
+    drive.breakMode();
     if(autonCommand != null) autonCommand.schedule();
   }
 
@@ -86,7 +86,7 @@ public class Robot extends TimedRobot {
     oi.regularOI();
     drive.periodicTele();
     //oi.testOI();
-    //oi.soberOI();
+    oi.soberOI();
     intake.periodic();
     elevatorClaw.periodic();
   }

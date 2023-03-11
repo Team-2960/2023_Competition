@@ -100,6 +100,8 @@ public class Swerve {
     public double anglePIDCalcABS(double angle){
         //angle *= 180/Math.PI;
         double calcAngleSpeed = 0;
+
+        angle = Drive.reduceAngle(angle);
         
         if(angle != 42069) {
             double curPos = angleEncoder.getAbsolutePosition();
@@ -154,21 +156,20 @@ public class Swerve {
         setDriveSpeed(FF + pidVal);
     }
     public void modState(SwerveModuleState state) {
-        double curPos = angleEncoder.getAbsolutePosition();
-        double posAngle = state.angle.getDegrees() + 180 + 90;
-        double curAngle = state.angle.getDegrees() + 90;
+        double curAngle = angleEncoder.getAbsolutePosition();
+        double posAngle = curAngle + 180;
+        double tarAngle = state.angle.getDegrees() + 90;
 
 
-        double curError = Math.abs(curPos - curAngle);
-        double posError = Math.abs(curPos - posAngle);
+        double curError = Math.abs(tarAngle - curAngle);
+        double posError = Math.abs(tarAngle - posAngle);
 
-        if(posError < curError&& false){
-            state.angle.getDegrees();
-            setAngleSpeed(anglePIDCalcABS(posAngle));
+        //Goes to the "positive" error if it is less than the current error
+        if(posError < curError){
+            setAngleSpeed(anglePIDCalcABS(tarAngle-180));
             setMetersPerSec(-state.speedMetersPerSecond);
         }else{
-            state.angle.getDegrees();
-            setAngleSpeed(anglePIDCalcABS(curAngle));
+            setAngleSpeed(anglePIDCalcABS(tarAngle));
             setMetersPerSec(state.speedMetersPerSecond);
         }
     }

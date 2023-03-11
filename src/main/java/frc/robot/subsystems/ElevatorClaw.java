@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import javax.swing.text.Position;
+import javax.swing.text.StyledEditorKit.ItalicAction;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
@@ -50,6 +53,8 @@ public class ElevatorClaw {
     private ElevatorState currentState;
     private ElevatorState targetState;
 
+    public static boolean isAtPosition;
+
     private ElevatorClaw (){
         mRElevator= new TalonFX(Constants.mRElevator, "Default Name");
         mLElevator= new TalonFX(Constants.mLElevator, "Default Name");
@@ -65,6 +70,8 @@ public class ElevatorClaw {
         currentState = ElevatorState.HOME;
         targetState = ElevatorState.HOME;
         mLElevator.setSelectedSensorPosition(0);
+
+        isAtPosition = false;
     }
 
     public static ElevatorClaw get_Instance(){
@@ -122,6 +129,10 @@ public class ElevatorClaw {
 
     public double feedForwardElevator(double tarVelocity){
         return tarVelocity * 0.0000573171 + 0.06;
+    }
+
+    public boolean isElevatorAtPosition(double tolerance){
+        return Math.abs(elevatorTarget - getElevatorPosition()) < tolerance;
     }
     /* 
     public void setElevatorState(ElevatorState position){
@@ -266,6 +277,10 @@ public class ElevatorClaw {
         }
     }
 
+    public double getElevatorPosition(){
+        return (mLElevator.getSelectedSensorPosition() - mRElevator.getSelectedSensorPosition())/2;
+    }
+
     public void setStopperState2(boolean state){
         if(state){
             sStopper.set(Value.kForward);
@@ -292,8 +307,8 @@ public class ElevatorClaw {
         if (enablePID){
         //    calcPID(target);
         }
-    if(!lowerPhotoEye.get()){
-        resetElevator();
-    }
+        if(!lowerPhotoEye.get()){
+            resetElevator();
+        }
     }
 }

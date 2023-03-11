@@ -91,7 +91,8 @@ public class toArrayMaker  extends CommandBase {
             double y = node.get(i).get("y").asDouble();
             double theta = node.get(i).get("theta").asDouble();
             double tolerance = node.get(i).get("tolerance").asDouble();
-            autoPathPoint tempPoint = new autoPathPoint(new Pose2d(x,y,Rotation2d.fromDegrees(theta)), tolerance);
+            boolean isSeeApril = node.get(i).get("isSeeApril").asBoolean();
+            autoPathPoint tempPoint = new autoPathPoint(new Pose2d(x,y,Rotation2d.fromDegrees(theta)), tolerance, isSeeApril);
             listOfCoords.add(tempPoint);
         }
 
@@ -148,18 +149,29 @@ public class toArrayMaker  extends CommandBase {
 
         //OMEGA CALCS
         //Add Step down function to manage omega make sure to include options for camera tracking
-        double currTheta = drive.getRobotPos().getRotation().getRadians();
+        double currTheta = Math.toRadians(drive.getFieldAngle());
         SmartDashboard.putNumber("curr Theta", currTheta);
 
         double currPosTheta =Math.toRadians(listOfCoords.get(currTarIndex).getTheta());
         double currPosPosTheta = Math.toRadians(listOfCoords.get(currTarIndex).getTheta() - 360);
         double currPosNegTheta = Math.toRadians(listOfCoords.get(currTarIndex).getTheta() + 360);
+
+        double dThetaRegErr = currPosTheta - currTheta;
+        double dThetaNegErr = currPosNegTheta - currTheta;
+        double dThetaPosErr = currPosPosTheta - currTheta;
+        double tarTheta = 0;
+        if(Math.abs(dThetaRegErr) > Math.abs(dThetaPosErr) && Math.abs(dThetaNegErr) > Math.abs(dThetaPosErr)){
+            tarTheta = currPosPosTheta;
+        }else if(Math.abs(dThetaRegErr) > Math.abs(dThetaNegErr) && Math.abs(dThetaPosErr) > Math.abs(dThetaNegErr)){
+            tarTheta = currPosNegTheta;
+        }else{
+            tarTheta = currPosTheta;
+        }
         
 
-        SmartDashboard.putNumber("currPos", currPosTheta);
+        SmartDashboard.putNumber("currPos", tarTheta);
 
-        double dTheta = currPosTheta - currTheta;
-        SmartDashboard.putNumber("dTheta", dTheta);
+        double dTheta = tarTheta - currTheta;
 
         double omega = 0;
 
@@ -183,7 +195,7 @@ public class toArrayMaker  extends CommandBase {
         
             drive.velX = velX;
             drive.velY = velY;
-            drive.omega = -omega;
+            drive.omega = omega;
 
             //INDEXING STUF
             if(mag < listOfCoords.get(currTarIndex).getTolerance()){
