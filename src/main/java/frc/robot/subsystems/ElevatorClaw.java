@@ -40,6 +40,7 @@ public class ElevatorClaw {
     private PIDController elvSpeedPID;
 
     private double elevatorTarget = 0;
+    private boolean changeGripperState = false;
 
     public enum ElevatorState{
         HOME,
@@ -50,13 +51,11 @@ public class ElevatorClaw {
     }
     private ElevatorState currentState;
     private ElevatorState targetState;
-
-    public static boolean isAtPosition;
-
+    private Timer gripperTimer;
     private ElevatorClaw (){
         mRElevator= new TalonFX(Constants.mRElevator, "Default Name");
         mLElevator= new TalonFX(Constants.mLElevator, "Default Name");
-        setElevatorBrakeMode();
+       // setElevatorBrakeMode();
         //mLElevator.setInverted(true);
         pElevatorPID = new PIDController(Constants.kElevatorp,Constants.kElevatori,Constants.kElevatord);
         elvSpeedPID = new PIDController(Constants.elvSpeedP, Constants.elvSpeedI, Constants.elvSpeedD);
@@ -69,8 +68,17 @@ public class ElevatorClaw {
         currentState = ElevatorState.HOME;
         targetState = ElevatorState.HOME;
         mLElevator.setSelectedSensorPosition(0);
+        elevatorStartPosition();
+
+
     }
 
+    public void elevatorStartPosition(){
+        setWristState(Value.kForward);
+        setStopperState(Value.kReverse);
+        setGripperState(Value.kReverse);
+    }
+    
     public static ElevatorClaw get_Instance(){
         if(elevatorClaw == null){
             elevatorClaw = new ElevatorClaw();
@@ -144,7 +152,13 @@ public class ElevatorClaw {
             targetPosition = Constants.cHome;
         }
         if(currentState != targetState){
+            if (currentState == ElevatorState.HOME && getGripperPos() == Value.kReverse ){
+                gripperTimer.start();
+
+                gripperTimer.restart();
+            }
             currentState = ElevatorState.MOVING;
+         changeGripperState = true;
             setTargetPosition(targetPosition);
         }
     }
@@ -162,12 +176,20 @@ public class ElevatorClaw {
         double direction = 1;
 
         if(diff > 0) direction = -1;
-        if(elevatorTarget < 1000 && currentPos < 1000){
+         if(elevatorTarget < 1000 && currentPos < 150){
             setElevator(0);
+            
+            if (currentState == ElevatorState.MOVING && targetState == ElevatorState.HOME){
+                changeGripperState = true;
+            }
             currentState = targetState;
         }
         else if(Math.abs(diff) <= tolerance){
             calcElevatorSpeed(0);
+           
+            if (currentState == ElevatorState.MOVING && targetState == ElevatorState.HOME){
+                changeGripperState = true;
+            }
             currentState = targetState;
         } else {
             rate = Math.abs(diff)*constantRD;
@@ -190,7 +212,10 @@ public class ElevatorClaw {
         mRElevator.setNeutralMode(NeutralMode.Brake);
         mLElevator.setNeutralMode(NeutralMode.Brake);
     }
-    
+    public void setElevatorCoastMode(){
+        mRElevator.setNeutralMode(NeutralMode.Coast);
+        mLElevator.setNeutralMode(NeutralMode.Coast);
+    }
     public void calcPID(double tar){
         double currentPos = mLElevator.getSelectedSensorPosition();
         double speed;
@@ -219,12 +244,19 @@ public class ElevatorClaw {
         }
     }
     public void checkGripperPosition(){
-        if(currentState == ElevatorState.HOME && targetState != ElevatorState.HOME){
+    if (changeGripperState){
+        if(targetState == ElevatorState.HOME && currentState != ElevatorState.HOME){
+            setGripperState(Value.kReverse);
+            changeGripperState = false;
+        }else if(currentState == ElevatorState.MOVING && targetState != ElevatorState.HOME){
+            setGripperState(Value.kReverse);
+            changeGripperState = false;
+        }else if(targetState == ElevatorState.HOME){
             setGripperState(Value.kForward);
-        }else if(targetState == ElevatorState.HOME && currentState != ElevatorState.HOME){
-            setGripperState(Value.kForward);
+            changeGripperState = false;
         }
     }
+}
 
     public void autoSetWristPos(){
 
@@ -269,9 +301,13 @@ public class ElevatorClaw {
     }
 
     public void periodic(){
+        gripperTimer.start();
+        if (gripperTimer.get() > 0.5){
         setElevatorPosition(elevatorTarget);
+        }
         checkStopperPosition();
         autoSetWristPos();
+        checkGripperPosition();
         //Right elevator is negative
         SmartDashboard.putNumber("elevatorEncoder1", mLElevator.getSelectedSensorVelocity());
         SmartDashboard.putNumber("elevatorEncoder2", mRElevator.getSelectedSensorVelocity());
