@@ -66,24 +66,13 @@ public class Intake {
      */
     public void setIntakeState(Value val){  
         sIntake.set(val);
-        if(val==Value.kForward){
+        if(val==Value.kReverse){
             intakeIn = true;
 
         }else{
             intakeIn = false;
         }
 
-    }
-    public void setIntakeState2(boolean state){
-        if(state){
-            sIntake.set(Value.kForward);
-            intakeIn = true;
-        }else{
-            sIntake.set(Value.kReverse);
-            intakeIn = false;
-        }
-        intakeTimer.reset();
-        intakeTimer.start();
     }
     public void checkIntakeTimer(){
         if(intakeTimer.get()>.25){
@@ -112,6 +101,11 @@ public class Intake {
             if(!conveyorOn){
                 setConveyorSpeed(0);
             }
+        }
+         
+        if(intakeIn){
+            setFlappySpeed(0);
+            setIntakeSpeed(0);
         }
     }
 
@@ -143,12 +137,6 @@ public class Intake {
         mConveyor.set(speed);
         if(speed == 0){
             conveyorOn = false;
-        }
-    }
-    public void checkIntakePosition(){
-        if(intakeIn){
-            setFlappySpeed(0);
-            setIntakeSpeed(0);
         }
     }
     
