@@ -20,6 +20,7 @@ public class OI {
     private static Joystick operatorControl;
     private static Joystick testJoy1;
     private static Joystick testJoy2;
+    //private static Joystick manualControl;
 
     private OI() {
         // Instantiate the subsystems
@@ -72,10 +73,10 @@ public class OI {
     public void regularOI(){
         //Drive Code
 
-        drive.setVector(driveAngle(driverControl.getRawAxis(0), driverControl.getRawAxis(1)),
+        /*drive.setVector(driveAngle(driverControl.getRawAxis(0), driverControl.getRawAxis(1)),
                     Math.sqrt(Math.pow(Math.abs(driverControl.getRawAxis(0)), 2)
                             + Math.pow(Math.abs(driverControl.getRawAxis(1)), 2)),
-                    driverControl.getRawAxis(4) * -2);
+                    driverControl.getRawAxis(4) * -2);*/
         //Elevator Control
        if (operatorControl.getRawButton(1)){
             elevatorClaw.setElevatorState(ElevatorClaw.ElevatorState.HOME);
@@ -92,9 +93,9 @@ public class OI {
         }
         //Elevator Adjust
         if(operatorControl.getRawAxis(1) > 0.2){
-            elevatorClaw.adjustElevatorPosition(1000);
+            elevatorClaw.adjustElevatorPosition(-500);
         }else if(operatorControl.getRawAxis(1) < -0.2){
-            elevatorClaw.adjustElevatorPosition(-1000);
+            elevatorClaw.adjustElevatorPosition(500);
         }
           // Back button is close claw, start button is open claw
         if (operatorControl.getRawButton(7)) {
@@ -142,6 +143,17 @@ public class OI {
         }          
     }
     
+
+    /*public void manualControls(){
+        if(manualControl.getPOV() == 0){
+            intake.setConveyorSpeed(1);
+        }else if(manualControl.getPOV() == 180){
+            intake.setConveyorSpeed(-1);
+        }
+        if(manualControl.getRawAxis(5) > 0.2){
+            intake.setFlappySpeed(1);
+        }else if(manualControl.getRawAxis(0))
+    }*/
 
 
 

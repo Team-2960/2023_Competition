@@ -90,7 +90,7 @@ public class Robot extends TimedRobot {
     oi.regularOI();
     drive.periodicTele();
     //oi.testOI();
-    oi.soberOI();
+    //oi.soberOI();
     intake.periodic();
     elevatorClaw.periodic();
   }

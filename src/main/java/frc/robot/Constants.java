@@ -72,7 +72,11 @@ public class Constants {
     public final static double cHome = -100;
     public final static double cLevel1 = 12000;
     public final static double cLevel2 = 22000;
-    public final static double cLevel3 = 40000;
+    public final static double cLevel3 = 39000;
+    //elevator Limits
+    public final static double elevatorMaxPos = 42000;
+    public final static double elevatorMinPos = -3000;
+    public final static double moveWristLimit = 38000;
 
     //PID Constants Swerve
     public static double dPFL = 0.0008;
