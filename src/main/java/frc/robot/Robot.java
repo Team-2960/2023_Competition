@@ -65,6 +65,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     drive.breakMode();
+    elevatorClaw.setElevatorCoastMode();
     try{
       autonCommand = new maker("lol this does nothing");
     }catch (IOException e){
@@ -79,7 +80,9 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void teleopInit() {}
+  public void teleopInit() {
+    elevatorClaw.setElevatorCoastMode();
+  }
 
   @Override
   public void teleopPeriodic() {
@@ -94,7 +97,7 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     drive.coastMode();
-    elevatorClaw.setElevator(0);
+    elevatorClaw.setElevatorBrakeMode();
   }
 
   @Override
