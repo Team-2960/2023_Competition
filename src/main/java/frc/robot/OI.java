@@ -93,27 +93,39 @@ public class OI {
         }else if(operatorControl.getRawButton(2)){
             elevatorClaw.setElevatorState(ElevatorClaw.ElevatorState.LEVEL3);
         }
+        //Elevator Adjust
+        if(operatorControl.getRawAxis(1) > 0.2){
+            elevatorClaw.adjustElevatorPosition(1000);
+        }else if(operatorControl.getRawAxis(1) < -0.2){
+            elevatorClaw.adjustElevatorPosition(-1000);
+        }
           // Back button is close claw, start button is open claw
         if (operatorControl.getRawButton(7)) {
             elevatorClaw.setGripperState(Value.kForward);
+            elevatorClaw.disableGripperAuto(true);
         }
         if (operatorControl.getRawButton(8)) {
             elevatorClaw.setGripperState(Value.kReverse);
+            elevatorClaw.disableGripperAuto(true);
         }
         // X button brings wrist down, Y button bings wrist up
         if (operatorControl.getPOV() == 270) {
             elevatorClaw.setWristState(Value.kForward);
+            elevatorClaw.disableWristAuto(true);
         }
         if (operatorControl.getPOV() == 90) {
             elevatorClaw.setWristState(Value.kReverse);
+            elevatorClaw.disableWristAuto(true);
         }
 
         // A button is stopper down, B button is stopper up
         if (operatorControl.getPOV() == 0) {
             elevatorClaw.setStopperState(Value.kForward);
+            elevatorClaw.disableStopperAuto(true);
         }
         if (operatorControl.getPOV() == 180) {
             elevatorClaw.setStopperState(Value.kReverse);
+            elevatorClaw.disableStopperAuto(true);
         }
 
         if (operatorControl.getRawButton(5)) {
