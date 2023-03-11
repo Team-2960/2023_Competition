@@ -3,6 +3,7 @@ package frc.robot.Auton;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import frc.robot.Constants;
 import frc.robot.Auton.*;
 
 import java.io.BufferedReader;
@@ -20,7 +21,8 @@ import edu.wpi.first.wpilibj.Filesystem;
 public class maker extends SequentialCommandGroup{
     public maker(String url) throws IOException{
         addCommands(
-            new toArrayMaker(1.25,0.75,0.5,0.5,0.3,20, Filesystem.getDeployDirectory() + "/pastAndBack.json"),
+            new armPos(Constants.cLevel3),
+            //new toArrayMaker(1.75,0.75,0.5,0.5,0.3,20, Filesystem.getDeployDirectory() + "/pastAndBack.json"),
             new autoBalance(),
             new oWheels()
         );

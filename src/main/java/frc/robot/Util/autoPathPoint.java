@@ -10,7 +10,7 @@ public class autoPathPoint {
         this.pose = pose;
         posTolerance = 0.2;
     }
-    public autoPathPoint(Pose2d pose, double coordTol){
+    public autoPathPoint(Pose2d pose, double coordTol, boolean isSeeApril){
         this.pose = pose;
         posTolerance = coordTol;
     }

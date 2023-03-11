@@ -11,6 +11,8 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -307,6 +309,16 @@ public class Drive {
         this.omega = omega;
     }
     */
+
+    //Gets robot angle relative to the Field
+    public double getFieldAngle(){
+        boolean isRedAlliance = NetworkTableInstance.getDefault().getTable("FMSInfo").getEntry("IsRedAlliance").getBoolean(false);
+        if(!isRedAlliance){
+            return navX.getAngle();
+        }else{
+            return navX.getAngle() + 180;
+        }
+    }
 
     //Update the speeds for autnomous movement
     public void autonUpdate() {

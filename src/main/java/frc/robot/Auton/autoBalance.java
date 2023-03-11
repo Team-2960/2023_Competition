@@ -57,18 +57,18 @@ public class autoBalance extends CommandBase {
         if(Math.abs(drive.navX.getRawGyroX()) > 3){
             timer2.start();
             if(pitch > 5 && timer2.get() > 0.1){
-                drive.velY = 0.15;
+                drive.velY = -0.05;
             }else if(pitch < -5 && timer2.get() > 0.1){
-                drive.velY = -0.15;
+                drive.velY = 0.05;
             }
         }else if(pitch > 7){
             timer2.reset();
             timer2.start();
-            drive.velY = -0.65;
+            drive.velY = 0.55;
         }else if(pitch < -7){
             timer2.reset();
             timer2.start();
-            drive.velY = 0.65;
+            drive.velY = -0.55;
         }
         else{
             timer2.reset();
