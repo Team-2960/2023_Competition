@@ -19,6 +19,10 @@ public class Lime {
     public double getHorOffset(){
         return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tx").getDouble(0);
     }
+
+    public void setPipeline(int setPipeline){
+        NetworkTableInstance.getDefault().getTable("limelight").getEntry("pipeline").setNumber(setPipeline);
+    }
     /*
     public double calcDistance(){
         return (Constants.h2-Constants.h1)/Math.tan((Constants.a1 - NetworkTableInstance.getDefault().getTable("limelight").getEntry("ty").getDouble(0))*Math.PI/180)-31;

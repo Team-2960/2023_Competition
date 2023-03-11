@@ -71,11 +71,14 @@ public class OI {
 
     public void regularOI(){
         //Drive Code
-
-        drive.setVector(driveAngle(driverControl.getRawAxis(0), driverControl.getRawAxis(1)),
-                    Math.sqrt(Math.pow(Math.abs(driverControl.getRawAxis(0)), 2)
-                            + Math.pow(Math.abs(driverControl.getRawAxis(1)), 2)),
-                    driverControl.getRawAxis(4) * -2);
+        if(driverControl.getRawButton(1)){
+            drive.centerOnPole();
+        }else{
+            drive.setVector(driveAngle(driverControl.getRawAxis(0), driverControl.getRawAxis(1)),
+                        Math.sqrt(Math.pow(Math.abs(driverControl.getRawAxis(0)), 2)
+                                + Math.pow(Math.abs(driverControl.getRawAxis(1)), 2)),
+                        driverControl.getRawAxis(4) * -2);
+        }
         //Elevator Control
        if (operatorControl.getRawButton(1)){
             elevatorClaw.setElevatorState(ElevatorClaw.ElevatorState.HOME);

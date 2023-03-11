@@ -71,6 +71,7 @@ public class Drive {
     //Sensor Vars
     public static AHRS navX;
     private double gyroAngle;
+    private Lime lime;
 
     //Autonomous Variables
 
@@ -158,6 +159,16 @@ public class Drive {
         so = swerveOdometry.get_Instance();
 
         autoTimer = new Timer();
+
+        lime = Lime.get_Instance();
+    }
+
+    public void centerOnPole(){
+        double angleVector = 90;
+        if(lime.getHorOffset() < 0){
+            angleVector = 270;
+        }
+        setVector(angleVector, Math.abs((lime.getHorOffset()-15)/35), 0);
     }
 
     //Reduces The Angle TO 0 to 360
