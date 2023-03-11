@@ -3,30 +3,29 @@ package frc.robot.Auton;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.ElevatorClaw;
+import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.Lime;
+import frc.robot.subsystems.Intake.IntakeDirection;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.*;
 
 
 
-public class armPos extends CommandBase {
+public class intakeOff extends CommandBase {
 
     boolean isFinished;
 
-    ElevatorClaw elevatorClaw;
+    Intake intake;
 
-    double position;
-
-    public armPos(double position) {
-        elevatorClaw = ElevatorClaw.get_Instance();
-        this.position = position;
+    public intakeOff() {
+        intake = Intake.get_Instance();
     }
 
     @Override
     public void initialize() {
-        elevatorClaw.setTargetPosition(position);
     }
 
     /**
@@ -42,12 +41,12 @@ public class armPos extends CommandBase {
      */
     @Override
     public boolean isFinished() {
-        return isFinished;
+        intake.setIntakeAll(IntakeDirection.OFF);
+        return true;
     }
 
     @Override
     public void execute() {
-        isFinished = elevatorClaw.isElevatorAtPosition();
     }
 
     /**
@@ -55,6 +54,5 @@ public class armPos extends CommandBase {
      */
     @Override
     public void end(boolean interrupte) {
-
     }
 }

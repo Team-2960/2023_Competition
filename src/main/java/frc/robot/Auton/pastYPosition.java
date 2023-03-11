@@ -2,7 +2,6 @@ package frc.robot.Auton;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drive;
-import frc.robot.subsystems.ElevatorClaw;
 import frc.robot.subsystems.Lime;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
@@ -11,22 +10,23 @@ import frc.robot.*;
 
 
 
-public class armPos extends CommandBase {
+public class pastYPosition extends CommandBase {
 
     boolean isFinished;
 
-    ElevatorClaw elevatorClaw;
+    private Drive drive;
 
-    double position;
+    private Timer timer;
 
-    public armPos(double position) {
-        elevatorClaw = ElevatorClaw.get_Instance();
-        this.position = position;
+    private double y;
+
+    public pastYPosition(double y) {
+        drive = Drive.get_Instance();
+        this.y = y;
     }
 
     @Override
     public void initialize() {
-        elevatorClaw.setTargetPosition(position);
     }
 
     /**
@@ -42,12 +42,11 @@ public class armPos extends CommandBase {
      */
     @Override
     public boolean isFinished() {
-        return isFinished;
+        return Math.abs(drive.so.getRobotPose().getY()) > y;
     }
 
     @Override
     public void execute() {
-        isFinished = elevatorClaw.isElevatorAtPosition();
     }
 
     /**
@@ -55,6 +54,5 @@ public class armPos extends CommandBase {
      */
     @Override
     public void end(boolean interrupte) {
-
     }
 }

@@ -21,10 +21,10 @@ import edu.wpi.first.wpilibj.Filesystem;
 public class maker extends SequentialCommandGroup{
     public maker(String url) throws IOException{
         addCommands(
-            new armPos(Constants.cLevel3),
-            //new toArrayMaker(1.75,0.75,0.5,0.5,0.3,20, Filesystem.getDeployDirectory() + "/pastAndBack.json"),
+            //new armPos(Constants.cLevel3),
+            new toArrayMaker(1.75,0.75,0.5,0.5,0.3,20, Filesystem.getDeployDirectory() + "/pastAndBack.json"),
             new autoBalance(),
-            new oWheels()
+            new xWheels()
         );
 
 

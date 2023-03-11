@@ -127,10 +127,6 @@ public class ElevatorClaw {
     public double feedForwardElevator(double tarVelocity){
         return tarVelocity * 0.0000573171 + 0.06;
     }
-
-    public boolean isElevatorAtPosition(double tolerance){
-        return Math.abs(elevatorTarget - getElevatorPosition()) < tolerance;
-    }
      
     public void setElevatorState(ElevatorState position){
         double targetPosition = 0;

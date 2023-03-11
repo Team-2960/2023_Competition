@@ -6,27 +6,28 @@ import frc.robot.subsystems.ElevatorClaw;
 import frc.robot.subsystems.Lime;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.*;
 
 
 
-public class armPos extends CommandBase {
+public class releaseGamePiece extends CommandBase {
 
     boolean isFinished;
 
     ElevatorClaw elevatorClaw;
 
-    double position;
+    Timer timer;
 
-    public armPos(double position) {
+    public releaseGamePiece() {
         elevatorClaw = ElevatorClaw.get_Instance();
-        this.position = position;
+        timer = new Timer();
     }
 
     @Override
     public void initialize() {
-        elevatorClaw.setTargetPosition(position);
+        timer.start();
     }
 
     /**
@@ -42,12 +43,12 @@ public class armPos extends CommandBase {
      */
     @Override
     public boolean isFinished() {
-        return isFinished;
+        return timer.get() > 0.1;
     }
 
     @Override
     public void execute() {
-        isFinished = elevatorClaw.isElevatorAtPosition();
+        elevatorClaw.setGripperState(Value.kForward);
     }
 
     /**
@@ -55,6 +56,6 @@ public class armPos extends CommandBase {
      */
     @Override
     public void end(boolean interrupte) {
-
+        timer.stop();
     }
 }

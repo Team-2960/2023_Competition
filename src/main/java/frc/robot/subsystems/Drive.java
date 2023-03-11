@@ -89,6 +89,7 @@ public class Drive {
     private Translation2d m_frontRightLocation;
     private Translation2d m_backLeftLocation;
     private Translation2d m_backRightLocation;
+    public static boolean isXWheels = false;
 
     public static Drive get_Instance(){
         if(drive == null){
@@ -288,6 +289,17 @@ public class Drive {
         }    
     }
 
+    public void setWheelsXTele(){
+        frontLeftSwerveSpeed = 0;
+        frontRightSwerveSpeed = 0;
+        backLeftSwerveSpeed = 0;
+        backRightSwerveSpeed = 0;
+        frontLeftSwerveAngle = 45;
+        frontRightSwerveAngle = 135;
+        backLeftSwerveAngle = 225;
+        backRightSwerveAngle = 315;
+    }
+
     //Called instead of the periodic function
     public void periodicTele() {
         updateOdometry();
@@ -337,6 +349,13 @@ public class Drive {
     
         // Back right module state
         SwerveModuleState frontLeftState = moduleStates[3];
+
+        if(isXWheels){
+            frontLeftState = new SwerveModuleState(0, new Rotation2d(Math.toRadians(45)));
+            frontRightState = new SwerveModuleState(0, new Rotation2d(Math.toRadians(135)));
+            backRightState = new SwerveModuleState(0, new Rotation2d(Math.toRadians(225)));
+            backLeftState = new SwerveModuleState(0, new Rotation2d(Math.toRadians(315)));
+        }
         
         SmartDashboard.putNumber("fl Angle tar", frontLeftState.angle.getDegrees());
         SmartDashboard.putNumber("fl Angle Error", frontLeft.anglePID.getPositionError());
