@@ -88,12 +88,15 @@ public class OI {
 
         }else if(operatorControl.getRawButton(3)){
             elevatorClaw.setElevatorState(ElevatorClaw.ElevatorState.LEVEL1);
-
+/
         }else if(operatorControl.getRawButton(4)){
             elevatorClaw.setElevatorState(ElevatorClaw.ElevatorState.LEVEL2);
             
         }else if(operatorControl.getRawButton(2)){
             elevatorClaw.setElevatorState(ElevatorClaw.ElevatorState.LEVEL3);
+        
+        }else if(operatorControl.getRawButton(10)){
+            elevatorClaw.setElevatorState(ElevatorClaw.ElevatorState.FEEDER);
         }
         //Elevator Adjust
         if(operatorControl.getRawAxis(1) > 0.2){
