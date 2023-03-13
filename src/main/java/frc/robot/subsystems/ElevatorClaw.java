@@ -46,6 +46,7 @@ public class ElevatorClaw {
         LEVEL1,
         LEVEL2,
         LEVEL3,
+        FEEDER,
         MOVING
     }
 
@@ -163,6 +164,8 @@ public class ElevatorClaw {
             targetPosition = Constants.cLevel3;
         } else if (position == ElevatorState.HOME) {
             targetPosition = Constants.cHome;
+        }else if (position == ElevatorState.FEEDER){
+            targetPosition = Constants.cFeeder;
         }
         if (currentState != targetState) {
             if (currentState == ElevatorState.HOME && getGripperPos() == Value.kForward) {
@@ -283,10 +286,12 @@ public class ElevatorClaw {
             } else if (currentState == ElevatorState.MOVING && targetState != ElevatorState.HOME) {
                 setGripperState(Value.kReverse);
                 changeGripperState = false;
+            } else if(targetState == ElevatorState.FEEDER){
+                setGripperState(Value.kForward);
             } else if (targetState == ElevatorState.HOME) {
                 setGripperState(Value.kForward);
                 changeGripperState = false;
-            }
+            } 
         }
     }
 
@@ -302,6 +307,9 @@ public class ElevatorClaw {
             setWristState(Value.kForward);
 
         } else if (targetState == ElevatorState.LEVEL3) {
+            setWristState(Value.kForward);
+        
+        }else if (targetState == ElevatorState.FEEDER){
             setWristState(Value.kForward);
         }
     }

@@ -74,6 +74,7 @@ public class Constants {
     public final static double cLevel1 = 12000;
     public final static double cLevel2 = 22000;
     public final static double cLevel3 = 44000;
+    public final static double cFeeder = 19000;
     //elevator Limits
     public final static double elevatorMaxPos = 45000;
     public final static double elevatorMinPos = -3000;

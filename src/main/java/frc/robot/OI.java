@@ -88,7 +88,7 @@ public class OI {
 
         }else if(operatorControl.getRawButton(3)){
             elevatorClaw.setElevatorState(ElevatorClaw.ElevatorState.LEVEL1);
-/
+
         }else if(operatorControl.getRawButton(4)){
             elevatorClaw.setElevatorState(ElevatorClaw.ElevatorState.LEVEL2);
             
