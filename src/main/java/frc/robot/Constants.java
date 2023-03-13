@@ -6,6 +6,7 @@ public class Constants {
     public final static int operatorControlID = 1;
     public final static int testJoy1 = 2;
     public final static int testJoy2 = 3;
+    public final static int manualControl = 4;
 
     //SWERVE-AUTON
     public final static double velocityToMeters = (10/8.14*Math.PI*3.9*0.0254)/(2048);
