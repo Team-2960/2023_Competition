@@ -1,6 +1,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.math.MathUsageId;
 import edu.wpi.first.wpilibj.Joystick;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.ElevatorClaw;
@@ -20,7 +21,7 @@ public class OI {
     private static Joystick operatorControl;
     private static Joystick testJoy1;
     private static Joystick testJoy2;
-    //private static Joystick manualControl;
+    private static Joystick manualControl;
 
     private OI() {
         // Instantiate the subsystems
@@ -32,7 +33,7 @@ public class OI {
         operatorControl = new Joystick(Constants.operatorControlID);
         testJoy1 = new Joystick(Constants.testJoy1);
         testJoy2 = new Joystick(Constants.testJoy2);
-
+        manualControl = new Joystick(Constants.manualControl);
     }
 
     public static OI get_Instance() {
@@ -78,7 +79,7 @@ public class OI {
             drive.setVector(driveAngle(driverControl.getRawAxis(0), driverControl.getRawAxis(1)),
                         Math.sqrt(Math.pow(Math.abs(driverControl.getRawAxis(0)), 2)
                                 + Math.pow(Math.abs(driverControl.getRawAxis(1)), 2)),
-                        driverControl.getRawAxis(4) * -2);
+                             driverControl.getRawAxis(4) * -2);
         }
         //Elevator Control
        if (operatorControl.getRawButton(1)){
@@ -147,16 +148,67 @@ public class OI {
     }
     
 
-    /*public void manualControls(){
-        if(manualControl.getPOV() == 0){
+   /*  public void manualControls(){
+        //Conveyor Manual Control "triggers"
+        if(manualControl.getRawAxis(2)>0.1){
             intake.setConveyorSpeed(1);
-        }else if(manualControl.getPOV() == 180){
+        }else if(manualControl.getRawAxis(3) > 0.1){
             intake.setConveyorSpeed(-1);
         }
-        if(manualControl.getRawAxis(5) > 0.2){
+        
+        //Flappy Manual Control "Bumpers"
+        if(manualControl.getRawButton(5)){
             intake.setFlappySpeed(1);
-        }else if(manualControl.getRawAxis(0))
+            //Intake.intakeIn= true;
+        }else if(manualControl.getRawButton(6)){
+            intake.setFlappySpeed(-1);
+        }
+        
+        //Stopper Manual Control "DPad up & down"
+        else if (manualControl.getPOV() == 0){
+            elevatorClaw.setStopperState(Value.kForward);
+            elevatorClaw.disableStopperAuto(true);
+
+        }else if(manualControl.getPOV() == 180){
+            elevatorClaw.setStopperState(Value.kReverse);
+            elevatorClaw.disableStopperAuto(true);
+        }
+
+        //Wrist Manual Control "DPad left and right"
+        else if(manualControl.getPOV() == 270) {
+            elevatorClaw.setWristState(Value.kForward);
+            elevatorClaw.disableWristAuto(true);
+        } else if (manualControl.getPOV() == 90) {
+            elevatorClaw.setWristState(Value.kReverse);
+            elevatorClaw.disableWristAuto(true);
+        }
+
+        //Gripper Manual State "Start and Back"
+        else if (manualControl.getRawButton(7)) {
+            elevatorClaw.setGripperState(Value.kForward);
+            elevatorClaw.disableGripperAuto(true);
+        } else if (manualControl.getRawButton(8)) {
+            elevatorClaw.setGripperState(Value.kReverse);
+            elevatorClaw.disableGripperAuto(true);
+        }
+
+        //Elevator Adjusting Manual Control "Left Joystick"
+        else if(manualControl.getRawAxis(1) > 0.2){
+            elevatorClaw.adjustElevatorPosition(-500);
+        }else if(manualControl.getRawAxis(1) < -0.2){
+            elevatorClaw.adjustElevatorPosition(500);
+        }
+
+        //Intake In and Out Manual Control "Buttons A and"
+        else if(manualControl.getRawButton(1)){
+            intake.setIntakeState(Value.kForward);
+        } else if(manualControl.getRawButton(2)){
+            intake.setIntakeState(Value.kReverse);
+        }
+
+
     }*/
+        
 
 
 
