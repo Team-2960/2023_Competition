@@ -1,4 +1,4 @@
-package frc.robot.Auton;
+package frc.robot.Auton.Autons;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
@@ -19,13 +19,12 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Filesystem;
 
 
-public class maker extends SequentialCommandGroup{
-    public maker(String url) throws IOException{
+public class cubeAndBalance extends SequentialCommandGroup{
+    public cubeAndBalance(String url) throws IOException{
         addCommands(
-
             new grabGamePiece(),
             new armPos(ElevatorState.LEVEL3),
-            new alignAndDriveVision(-6.5, 1, 0.3,0.2),
+            new alignAndDriveApril(-6.3, 1, 0.2,0.2),
             new releaseGamePiece(),
             new ParallelCommandGroup(
                 new SequentialCommandGroup(
@@ -34,7 +33,6 @@ public class maker extends SequentialCommandGroup{
                 new toArrayMaker(1.75,0.75,0.5,0.5,0.3,20, Filesystem.getDeployDirectory() + "/pastAndBack.json")),
             new autoBalance(),
             new xWheels()
-
         );
 
 

@@ -19,10 +19,12 @@ public class pastXPosition extends CommandBase {
     private Timer timer;
 
     private double x;
+    private boolean isGreater;
 
-    public pastXPosition(double x) {
+    public pastXPosition(double x, boolean isGreater) {
         drive = Drive.get_Instance();
         this.x = x;
+        this.isGreater = isGreater;
     }
 
     @Override
@@ -42,7 +44,12 @@ public class pastXPosition extends CommandBase {
      */
     @Override
     public boolean isFinished() {
-        return Math.abs(drive.so.getRobotPose().getX()) > x;
+        if(isGreater){
+            return Math.abs(drive.so.getRobotPose().getX()) > x;
+        }
+        else{
+            return Math.abs(drive.so.getRobotPose().getX()) < x;
+        }
     }
 
     @Override

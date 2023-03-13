@@ -323,6 +323,7 @@ public class ElevatorClaw {
     }
 
     public void periodic(){
+        gripperTimer.start();
         if (gripperTimer.get() > .5){
             setElevatorPosition(elevatorTarget);
             if (enableWristAuto){

@@ -196,7 +196,7 @@ public class swerveOdometry{
         FRD.append(fr.speedMetersPerSecond);
 
         SmartDashboard.putBoolean("is see april", lime.isSeeApril());
-        if(lime.isSeeApril()){
+        if(lime.isSeeApril() && lime.getPipeline() !=1 ){
            x = lime.getX();
            y = lime.getY();
            /*
