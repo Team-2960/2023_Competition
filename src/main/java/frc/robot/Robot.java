@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Auton.maker;
+import frc.robot.Auton.Autons.balance;
 import frc.robot.subsystems.*;
 
 /**
@@ -34,6 +35,7 @@ public class Robot extends TimedRobot {
   private ElevatorClaw elevatorClaw;
   private Drive drive;
   private Command autonCommand;
+  private Lime lime;
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -48,6 +50,7 @@ public class Robot extends TimedRobot {
     intake = Intake.get_Instance();
     elevatorClaw = ElevatorClaw.get_Instance();
     drive = Drive.get_Instance();
+    lime = Lime.get_Instance();
     //ph.disable();
     drive.coastMode();
     try{
@@ -59,10 +62,10 @@ public class Robot extends TimedRobot {
 
   @Override
   public void robotPeriodic() {
+    drive.updateOdometry();
     CommandScheduler.getInstance().run();
     /*
     elevatorClaw.periodic();
-    drive.updateOdometry();
     drive.putNavX();
     */
   }
@@ -71,6 +74,11 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     drive.breakMode();
     elevatorClaw.setElevatorCoastMode();
+    try{
+      autonCommand = new maker("lol this does nothing");
+    }catch (IOException e){
+      e.printStackTrace();
+    }
     if(autonCommand != null) autonCommand.schedule();
   }
 
@@ -82,6 +90,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    lime.setPipeline(0);
     elevatorClaw.setElevatorCoastMode();
   }
 

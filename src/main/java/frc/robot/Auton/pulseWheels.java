@@ -2,32 +2,38 @@ package frc.robot.Auton;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drive;
-import frc.robot.subsystems.ElevatorClaw;
 import frc.robot.subsystems.Lime;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.*;
 
 
 
-public class grabGamePiece extends CommandBase {
+public class pulseWheels extends CommandBase {
 
     boolean isFinished;
 
-    ElevatorClaw elevatorClaw;
+    Drive drive;
 
     Timer timer;
 
-    public grabGamePiece() {
-        elevatorClaw = ElevatorClaw.get_Instance();
+    double velX;
+    double velY;
+
+    double time;
+    public pulseWheels(double time, double velX, double velY) {
+        drive = Drive.get_Instance();
         timer = new Timer();
+        this.velY = velY;
+        this.velX = velX;
+        this.time = time;
     }
 
     @Override
     public void initialize() {
-        timer.reset();
+        drive.velX = velX;
+        drive.velY = velY;
         timer.start();
     }
 
@@ -44,13 +50,11 @@ public class grabGamePiece extends CommandBase {
      */
     @Override
     public boolean isFinished() {
-        return timer.get() > 0.2;
+        return timer.get() > time;
     }
 
     @Override
-    public void execute() {
-        elevatorClaw.setGripperState(Value.kReverse);
-    }
+    public void execute() {}
 
     /**
      * @param interrupte
@@ -58,5 +62,6 @@ public class grabGamePiece extends CommandBase {
     @Override
     public void end(boolean interrupte) {
         timer.stop();
+        drive.velY =0;
     }
 }

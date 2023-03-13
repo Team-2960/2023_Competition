@@ -12,7 +12,7 @@ public class Constants {
     public final static double velocityToMeters = (10/8.14*Math.PI*3.9*0.0254)/(2048);
 
     //Theta Thresholding
-    public static double thresholdT1 = 0.05;
+    public static double thresholdT1 = 0.075;
     public static double tVel1 = 0;
 
     public static double thresholdT2 = 0.2;
@@ -73,9 +73,9 @@ public class Constants {
     public final static double cHome = -100;
     public final static double cLevel1 = 12000;
     public final static double cLevel2 = 22000;
-    public final static double cLevel3 = 39000;
+    public final static double cLevel3 = 44000;
     //elevator Limits
-    public final static double elevatorMaxPos = 42000;
+    public final static double elevatorMaxPos = 45000;
     public final static double elevatorMinPos = -3000;
     public final static double moveWristLimit = 38000;
 

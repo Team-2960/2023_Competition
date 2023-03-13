@@ -4,6 +4,9 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drive;
 import frc.robot.subsystems.ElevatorClaw;
 import frc.robot.subsystems.Lime;
+
+import javax.swing.plaf.metal.MetalBorders.ScrollPaneBorder;
+
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -12,7 +15,7 @@ import frc.robot.*;
 
 
 
-public class centerOnPole extends CommandBase {
+public class alignAndDriveApril extends CommandBase {
 
     boolean isFinished;
 
@@ -26,20 +29,31 @@ public class centerOnPole extends CommandBase {
     double error = 100000;
     double angleError = 10000;
 
-    public centerOnPole() {
+    double xCoord = 0;
+    double baseSpeed = 0;
+    double slowSpeed = 0;
+    double adjSpeed = 0;
+    double slowDownDistance = 0.5;
+    double tolerance = 0;
+    double dx;
+
+    public alignAndDriveApril(double xCoord, double baseSpeed, double slowSpeed, double tolerance) {
         drive = Drive.get_Instance();
         lime = Lime.get_Instance();
         timer = new Timer();
         visionTimer = new Timer();
+        this.xCoord = xCoord;
+        this.baseSpeed = baseSpeed;
+        this.slowSpeed = slowSpeed;
+        this.tolerance = tolerance;
     }
 
     @Override
     public void initialize() {
-        lime.setPipeline(1);
+        lime.setPipeline(2);
         timer.reset();
         timer.start();
         visionTimer.reset();
-        visionTimer.start();
     }
 
     /**
@@ -55,13 +69,32 @@ public class centerOnPole extends CommandBase {
      */
     @Override
     public boolean isFinished() {
-        return visionTimer.get() > 0.2 && Math.toDegrees(Math.abs(angleError)) < 4;
+        return (visionTimer.get() > 0.2 && Math.toDegrees(Math.abs(angleError)) < 10) && Math.abs(dx) < tolerance;
     }
 
     @Override
     public void execute() {
-        double sigError = 16-lime.getHorOffset();
-        if(Math.abs(error) < 1){
+        SmartDashboard.putNumber("angle error", Math.toDegrees(angleError));
+        SmartDashboard.putNumber("vision timer", visionTimer.get());
+        SmartDashboard.putNumber("dx a", dx);
+        double currXRobot = drive.getRobotPos().getX();
+        angleError = Math.abs(drive.getRobotPos().getRotation().getRadians() - 0);
+        double tarPointX = xCoord;
+        dx = tarPointX - currXRobot;
+        double mag = Math.sqrt(Math.pow(dx, 2));
+        double udx = dx/mag;
+
+        if(mag < slowDownDistance){
+            double slope = (baseSpeed - slowSpeed)/slowDownDistance;
+            adjSpeed = slowSpeed + mag * slope;
+        }else{
+            adjSpeed = baseSpeed;
+        }
+
+        double velX = adjSpeed * udx;
+        drive.velY = velX;
+        double sigError = 11-lime.getHorOffset();
+        if(Math.abs(sigError) < 2){
             visionTimer.start();
         }else{
             visionTimer.reset();
@@ -71,7 +104,7 @@ public class centerOnPole extends CommandBase {
                 error = Math.abs(11-lime.getHorOffset());
                 double dir = 1;
                 if(sigError > 0) dir = -1;
-                drive.velX = dir * error/10;
+                drive.velX = dir * error/16;
                 drive.omega = 0;
             }
         }else{
@@ -126,6 +159,7 @@ public class centerOnPole extends CommandBase {
      */
     @Override
     public void end(boolean interrupte) {
+        System.out.println("Finished Command");
         lime.setPipeline(0);
         drive.velY = 0;
         drive.velX = 0;
