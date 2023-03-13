@@ -1,8 +1,5 @@
 package frc.robot.subsystems;
 
-import javax.swing.text.Position;
-import javax.swing.text.StyledEditorKit.ItalicAction;
-
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
@@ -33,7 +30,7 @@ public class ElevatorClaw {
     private DigitalInput upperPhotoEye;
 
 
-    private boolean enablePID = false;
+    private boolean enableElevatorPID = false;
     private double target = 0;
 
     private PIDController pElevatorPID;
@@ -104,7 +101,10 @@ public class ElevatorClaw {
      * @param val the state of gripper solenoids
      */
     public void setWristState(Value val){
-        sWrist.set(val);
+        if(mLElevator.getSelectedSensorPosition() < Constants.moveWristLimit){
+            sWrist.set(val);
+        }
+        
     }
 
    
@@ -114,6 +114,11 @@ public class ElevatorClaw {
      * @param speedL Right speed
      */
     public void setElevator(double speed){
+        if(speed < 0 && mLElevator.getSelectedSensorPosition() > Constants.elevatorMaxPos){
+            speed = 0;
+        }else if(speed > 0 && mLElevator.getSelectedSensorPosition() < Constants.elevatorMinPos){
+            speed = 0;
+        }
         mLElevator.set(ControlMode.PercentOutput, -speed);
         mRElevator.set(ControlMode.PercentOutput, speed);
     }
@@ -162,7 +167,7 @@ public class ElevatorClaw {
                 gripperTimer.reset();
             }
             currentState = ElevatorState.MOVING;
-         changeGripperState = true;
+            changeGripperState = true;
             setTargetPosition(targetPosition);
             disableGripperAuto(false);
             disableWristAuto(false);
@@ -171,12 +176,12 @@ public class ElevatorClaw {
     }
     public void setTargetPosition(double target){
         elevatorTarget = target;
-        enablePID = true;
+        enableElevatorPID = true;
     }
     public void setElevatorPosition(double position){
         double maxSpeed = 8500;
         double minSpeed = 750;
-        double constantRD = 0.35;
+        double constantRD = 0.4;
         double rate;
         double currentPos = (mLElevator.getSelectedSensorPosition() - mRElevator.getSelectedSensorPosition())/2;
         double diff = currentPos - position;
@@ -184,7 +189,7 @@ public class ElevatorClaw {
         double direction = 1;
 
         if(diff > 0) direction = -1;
-         if(elevatorTarget < 1000 && currentPos < 600){
+         if(elevatorTarget < 1000 && currentPos < tolerance){
             setElevator(0);
             
             if (currentState == ElevatorState.MOVING && targetState == ElevatorState.HOME){
@@ -235,12 +240,14 @@ public class ElevatorClaw {
         setElevator(-speed);
     }
     public void adjustElevatorPosition(double position){
-        elevatorTarget = elevatorTarget + position;
+        if(elevatorTarget < (Constants.elevatorMaxPos - 1001)){
+            elevatorTarget = elevatorTarget + position;
+        }
     }
     /* 
     public void setElevatorPosition(double targetPosition){
             target = targetPosition;
-            enablePID = true;
+            enableElevatorPID = true;
     }
 */
     public boolean isElevatorAtPosition(){
@@ -321,11 +328,15 @@ public class ElevatorClaw {
     public boolean getUpperPhotoEye(){
         return upperPhotoEye.get();
     }
-
-    public void periodic(){
+    public void enableElevatorPID(boolean enable){
+        enableElevatorPID = enable;
+    }
+    public void periodic(){ 
         gripperTimer.start();
         if (gripperTimer.get() > .5){
-            setElevatorPosition(elevatorTarget);
+            if(enableElevatorPID){
+                setElevatorPosition(elevatorTarget);
+            }
             if (enableWristAuto){
                 autoSetWristPos();
             }
@@ -343,7 +354,7 @@ public class ElevatorClaw {
         SmartDashboard.putNumber("elevatorPosition1", mLElevator.getSelectedSensorPosition());
         SmartDashboard.putNumber("elevatorPosition2", mRElevator.getSelectedSensorPosition());
         SmartDashboard.putBoolean("atTargetPosition", isElevatorAtPosition());
-        if (enablePID){
+        if (enableElevatorPID){
         //    calcPID(target);
         }
         if(!lowerPhotoEye.get()){
