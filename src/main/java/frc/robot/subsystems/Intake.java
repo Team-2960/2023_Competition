@@ -22,6 +22,7 @@ public class Intake {
     private boolean conveyorOn;
     private Timer conveyorTimer;
     private Timer intakeTimer;
+    //public boolean intakeIn2;
 
     private static Intake intake;
 
@@ -45,6 +46,7 @@ public class Intake {
         sIntake = new DoubleSolenoid(18,PneumaticsModuleType.REVPH, Constants.sIntakeID[0], Constants.sIntakeID[1]);
         gamePiecePhotoEye = new DigitalInput(Constants.gamePiecePhotoeye);
         intakeIn = true;
+       // intakeIn2 = true;
         conveyorOn = false;
         intakeTimer = new Timer();
         conveyorTimer = new Timer();
@@ -68,9 +70,11 @@ public class Intake {
         sIntake.set(val);
         if(val==Value.kReverse){
             intakeIn = true;
+            //intakeIn2 = true;
 
         }else{
             intakeIn = false;
+            //intakeIn2 = false;
         }
 
     }
