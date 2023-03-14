@@ -59,7 +59,7 @@ public class Intake {
      * @param speed the speed of the intake
      */
     public void setIntakeSpeed(double speed){
-        mIntake.set(speed);
+        mIntake.set(speed/2);
     }
 
     /**

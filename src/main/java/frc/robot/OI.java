@@ -105,7 +105,7 @@ public class OI {
             elevatorClaw.adjustElevatorPosition(500);
         }
           // Back button is close claw, start button is open claw
-        if (operatorControl.getRawButton(7)) {
+        if (operatorControl.getRawButton(7) || driverControl.getRawButton(6)) {
             elevatorClaw.setGripperState(Value.kForward);
             elevatorClaw.disableGripperAuto(true);
         }
