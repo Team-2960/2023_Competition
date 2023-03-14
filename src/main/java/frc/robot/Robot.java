@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Auton.maker;
 import frc.robot.Auton.Autons.balance;
+import frc.robot.Auton.Autons.cubeAndBalance;
 import frc.robot.subsystems.*;
 
 /**

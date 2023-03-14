@@ -52,6 +52,7 @@ public class ElevatorClaw {
     private ElevatorState currentState;
     private ElevatorState targetState;
     private Timer gripperTimer;
+    private Timer stopperTimer;
     private ElevatorClaw (){
         mRElevator= new TalonFX(Constants.mRElevator, "Default Name");
         mLElevator= new TalonFX(Constants.mLElevator, "Default Name");
@@ -71,8 +72,7 @@ public class ElevatorClaw {
         gripperTimer = new Timer();
         gripperTimer.start();
         elevatorStartPosition();
-
-        gripperTimer = new Timer();
+        stopperTimer = new Timer();
     }
 
     public void elevatorStartPosition(){
@@ -179,7 +179,7 @@ public class ElevatorClaw {
         enableElevatorPID = true;
     }
     public void setElevatorPosition(double position){
-        double maxSpeed = 8500;
+        double maxSpeed = 6000;//8500;
         double minSpeed = 750;
         double constantRD = 0.4;
         double rate;
@@ -258,6 +258,8 @@ public class ElevatorClaw {
     public void checkStopperPosition(){
         if(targetState == ElevatorState.HOME && currentState == ElevatorState.HOME){
             setStopperState(Value.kForward);
+            stopperTimer.reset();
+            stopperTimer.start();
         }else{
             setStopperState(Value.kReverse);
         }
@@ -332,19 +334,18 @@ public class ElevatorClaw {
         enableElevatorPID = enable;
     }
     public void periodic(){ 
+        if (enableStopperAuto) {
+            checkStopperPosition();
+        }
         gripperTimer.start();
-        if (gripperTimer.get() > .5){
-            if(enableElevatorPID){
+        if (gripperTimer.get() > 0.5){
+            if(enableElevatorPID && stopperTimer.get() > 1){
                 setElevatorPosition(elevatorTarget);
             }
             if (enableWristAuto){
                 autoSetWristPos();
             }
         }
-        if (enableStopperAuto) {
-            checkStopperPosition();
-        }
-        
         if (enableGripperAuto){
             checkGripperPosition();
         }
