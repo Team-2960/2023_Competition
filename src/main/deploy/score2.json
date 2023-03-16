@@ -3,51 +3,44 @@
         "size": 5
     },
     {
-        "x": -5.585,
-        "y": 0.594,
+        "x": -6.188,
+        "y": 0.672,
         "theta": 0,
-        "tolerance": 0.2
+        "tolerance": 0.2,
+        "isSeeApril": false
+
     },
     {
-        "x": -3.249,
+        "x": -3.99,
         "y": 1.2,
         "theta": 0,
-        "tolerance": 0.2
+        "tolerance": 0.2,
+        "isSeeApril": false
+
     },
     {
-        "x": -1.616,
-        "y": 0.848,
+        "x": -1.577,
+        "y": 1.04,
         "theta": 0,
-        "tolerance": 0.1
+        "tolerance": 0.2,
+        "isSeeApril": false
+
     },
     {
-        "x": -3.249,
-        "y": 1.39,
+        "x": -3.99,
+        "y": 1.2,
         "theta": 0,
-        "tolerance": 0.2
+        "tolerance": 0.2,
+        "isSeeApril": false
+
     },
     {
-        "x": -5.585,
-        "y": 0.594,
+        "x": -6.087,
+        "y": 0.994,
         "theta": 0,
-        "tolerance": 0.2
-    },
-    {
-        "x": -6.036,
-        "y": 0.506,
-        "theta": 0,
-        "tolerance": 0.1
-    },
-    {
-        "x": -5.736,
-        "y": -0.5,
-        "theta": 0,
-        "tolerance": 0.3
-    },
-    {
-        "x": -4,
-        "y": -1.386,
-        "theta": 0,
-        "tolerance": 0.2
+        "tolerance": 0.1,
+        "isSeeApril": false
+
     }
+
 ]

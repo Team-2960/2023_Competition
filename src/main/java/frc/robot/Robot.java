@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.Auton.maker;
 import frc.robot.Auton.Autons.balance;
+import frc.robot.Auton.Autons.coneAndBalance;
 import frc.robot.Auton.Autons.cubeAndBalance;
 import frc.robot.subsystems.*;
 
@@ -37,6 +38,9 @@ public class Robot extends TimedRobot {
   private Drive drive;
   private Command autonCommand;
   private Lime lime;
+
+  public Robot(){
+  }
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -65,28 +69,20 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     drive.updateOdometry();
     CommandScheduler.getInstance().run();
-    /*
+    
     elevatorClaw.periodic();
-    drive.putNavX();
-    */
   }
 
   @Override
   public void autonomousInit() {
     drive.breakMode();
     elevatorClaw.setElevatorCoastMode();
-    try{
-      autonCommand = new maker("lol this does nothing");
-    }catch (IOException e){
-      e.printStackTrace();
-    }
     if(autonCommand != null) autonCommand.schedule();
   }
 
   @Override
   public void autonomousPeriodic() {
     drive.autonUpdate();
-    elevatorClaw.periodic();
   }
 
   @Override

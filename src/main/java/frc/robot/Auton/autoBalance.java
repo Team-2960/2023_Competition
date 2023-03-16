@@ -24,6 +24,8 @@ public class autoBalance extends CommandBase {
         drive = Drive.get_Instance();
         timer = new Timer();
         timer2 = new Timer();
+        System.out.println("AUto balance");
+
     }
 
     @Override
@@ -62,11 +64,11 @@ public class autoBalance extends CommandBase {
             }else if(pitch < -5 && timer2.get() > 0.1){
                 drive.velY = 0.05;
             }
-        }else if(pitch > 7){
+        }else if(pitch > 10){
             timer2.reset();
             timer2.start();
             drive.velY = 0.55;
-        }else if(pitch < -7){
+        }else if(pitch < -10){
             timer2.reset();
             timer2.start();
             drive.velY = -0.55;

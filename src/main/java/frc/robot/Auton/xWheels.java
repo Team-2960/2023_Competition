@@ -20,6 +20,7 @@ public class xWheels extends CommandBase {
     public xWheels() {
         drive = Drive.get_Instance();
         timer = new Timer();
+        System.out.println("xWheels");
     }
 
     @Override

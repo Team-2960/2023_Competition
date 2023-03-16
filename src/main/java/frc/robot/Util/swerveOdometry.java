@@ -176,7 +176,7 @@ public class swerveOdometry{
         x += dx * timeStep;
         y += dy * timeStep;
         theta = gyroHeadingRad;
-
+        /*
         xLog.append(x);
         yLog.append(y);
         tLog.append(theta);
@@ -194,6 +194,7 @@ public class swerveOdometry{
         FLD.append(fl.speedMetersPerSecond);
         FRA.append(fr.angle.getDegrees());
         FRD.append(fr.speedMetersPerSecond);
+        */
 
         SmartDashboard.putBoolean("is see april", lime.isSeeApril());
         if(lime.isSeeApril() && lime.getPipeline() !=1 ){

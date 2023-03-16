@@ -23,6 +23,7 @@ public class grabGamePiece extends CommandBase {
     public grabGamePiece() {
         elevatorClaw = ElevatorClaw.get_Instance();
         timer = new Timer();
+        System.out.println("Grab Piece");
     }
 
     @Override

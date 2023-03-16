@@ -97,8 +97,7 @@ public class toArrayMaker  extends CommandBase {
         }
 
 
-        this.wayPoints = wayPoints;
-        this.crit = crit;
+
         this.baseSpeed = baseSpeed;
         this.slowSpeed = slowSpeed;
         this.slowDownDistance = slowDownDistance;
@@ -108,6 +107,8 @@ public class toArrayMaker  extends CommandBase {
         currIndexInner = 0;
         currIndexOuter = 0;
         drive = Drive.get_Instance();
+        System.out.println("To array");
+
     }
 
     @Override

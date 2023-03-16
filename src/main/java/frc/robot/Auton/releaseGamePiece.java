@@ -23,6 +23,8 @@ public class releaseGamePiece extends CommandBase {
     public releaseGamePiece() {
         elevatorClaw = ElevatorClaw.get_Instance();
         timer = new Timer();
+        System.out.println("release Piece");
+
     }
 
     @Override

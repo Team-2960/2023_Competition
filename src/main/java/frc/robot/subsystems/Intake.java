@@ -59,7 +59,7 @@ public class Intake {
      * @param speed the speed of the intake
      */
     public void setIntakeSpeed(double speed){
-        mIntake.set(speed/2);
+        mIntake.set(speed/4);
     }
 
     /**
@@ -118,7 +118,7 @@ public class Intake {
            if (getGamePiecePhotoeye()){
             conveyorOn =  false;
            }
-           else if(conveyorTimer.get() > 1.5){
+           else if(conveyorTimer.get() > 0){//1.5
             conveyorOn = false;
             conveyorTimer.stop();
            }

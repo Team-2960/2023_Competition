@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.*;
 
-public class alignAndDriveVision extends CommandBase {
+public class alignAndDriveVisionRight extends CommandBase {
 
     boolean isFinished;
 
@@ -38,7 +38,7 @@ public class alignAndDriveVision extends CommandBase {
     double tarAngle;
     double limeTol;
 
-    public alignAndDriveVision(double xCoord, double baseSpeed, double slowSpeed, double tolerance, double tarAngle) {
+    public alignAndDriveVisionRight(double xCoord, double baseSpeed, double slowSpeed, double tolerance, double tarAngle) {
         drive = Drive.get_Instance();
         lime = Lime.get_Instance();
         timer = new Timer();
@@ -52,7 +52,7 @@ public class alignAndDriveVision extends CommandBase {
         System.out.println("Align Grab");
     }
 
-    public alignAndDriveVision(double xCoord, double baseSpeed, double slowSpeed, double tolerance, double tarAngle, double limeTol) {
+    public alignAndDriveVisionRight(double xCoord, double baseSpeed, double slowSpeed, double tolerance, double tarAngle, double limeTol) {
         drive = Drive.get_Instance();
         lime = Lime.get_Instance();
         timer = new Timer();
@@ -68,7 +68,7 @@ public class alignAndDriveVision extends CommandBase {
 
     @Override
     public void initialize() {
-        lime.setPipeline(1);
+        lime.setPipeline(3);
         timer.reset();
         timer.start();
         delayTimer.reset();

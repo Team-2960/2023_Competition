@@ -66,9 +66,10 @@ public class centerOnPole extends CommandBase {
         }else{
             visionTimer.reset();
         }
-        if(drive.getRobotPos().getRotation().getDegrees() < 10){
+        if(Math.abs(drive.getRobotPos().getRotation().getDegrees()) < 10){
             if(timer.get() > 0.2){
                 error = Math.abs(11-lime.getHorOffset());
+                error = Math.min(3, Math.max(11, error));
                 double dir = 1;
                 if(sigError > 0) dir = -1;
                 drive.velX = dir * error/10;

@@ -2,9 +2,7 @@ package frc.robot.Auton;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drive;
-import frc.robot.subsystems.ElevatorClaw;
 import frc.robot.subsystems.Lime;
-import frc.robot.subsystems.ElevatorClaw.ElevatorState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -12,24 +10,28 @@ import frc.robot.*;
 
 
 
-public class armPos extends CommandBase {
+public class wait extends CommandBase {
 
     boolean isFinished;
 
-    ElevatorClaw elevatorClaw;
+    Drive drive;
 
-    ElevatorState position;
+    Timer timer;
 
-    public armPos(ElevatorState position) {
-        elevatorClaw = ElevatorClaw.get_Instance();
-        this.position = position;
-        System.out.println("Arm Pos");
+    Timer timer2;
 
+    private double time;
+    public wait(double time) {
+        drive = Drive.get_Instance();
+        timer = new Timer();
+        this.time = time;
     }
 
     @Override
     public void initialize() {
-        elevatorClaw.setElevatorState(position);
+        drive.velX = 0;
+        drive.velY = 0;
+        timer.start();
     }
 
     /**
@@ -45,12 +47,11 @@ public class armPos extends CommandBase {
      */
     @Override
     public boolean isFinished() {
-        return elevatorClaw.isElevatorAtPosition();
+        return timer.get() > time;
     }
 
     @Override
     public void execute() {
-        isFinished = elevatorClaw.isElevatorAtPosition();
     }
 
     /**
@@ -58,6 +59,8 @@ public class armPos extends CommandBase {
      */
     @Override
     public void end(boolean interrupte) {
-
+        timer.stop();
+        drive.velY =0;
+        drive.velX = 0;
     }
 }

@@ -20,12 +20,20 @@ public class intakeOn extends CommandBase {
 
     Intake intake;
 
-    public intakeOn() {
+    Timer timer;
+    double time;
+
+    public intakeOn(double time) {
         intake = Intake.get_Instance();
+        timer = new Timer();
+        this.time = time;
     }
 
     @Override
     public void initialize() {
+        timer.start();
+        intake.setIntakeState(Value.kForward);
+
     }
 
     /**
@@ -41,12 +49,12 @@ public class intakeOn extends CommandBase {
      */
     @Override
     public boolean isFinished() {
-        intake.setIntakeAll(IntakeDirection.FORWARD);
-        return true;
+        return timer.get()> time;
     }
 
     @Override
     public void execute() {
+        intake.setIntakeAll(IntakeDirection.FORWARD);
     }
 
     /**
@@ -54,5 +62,8 @@ public class intakeOn extends CommandBase {
      */
     @Override
     public void end(boolean interrupte) {
+        intake.setIntakeAll(IntakeDirection.OFF);
+        intake.setIntakeState(Value.kReverse);
+        intake.setConveyorSpeed(0);
     }
 }
