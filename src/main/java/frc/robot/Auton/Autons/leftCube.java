@@ -24,7 +24,7 @@ public class leftCube extends SequentialCommandGroup{
         addCommands(
             new grabGamePiece(),
             new armPos(ElevatorState.LEVEL3),
-            new alignAndDriveApril(-6.25, 1, 0.3,0.2),
+            new alignAndDriveApril(-6.25, 1, 0.3,0.2, 7),
             new releaseGamePiece(),
             new ParallelCommandGroup(
                 new SequentialCommandGroup(

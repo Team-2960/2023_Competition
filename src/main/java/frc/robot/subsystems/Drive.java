@@ -13,8 +13,10 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Util.Swerve;
@@ -246,7 +248,7 @@ public class Drive {
         SwerveModuleState bl = backLeft.getState();
         // Back right module state
         SwerveModuleState br = backRight.getState();
-        so.updateOdometry(fl, fr, bl, br, navX.getAngle(), timeStep);
+        so.updateOdometry(fl, fr, bl, br, Drive.getFieldAngle(), timeStep);
     }
 
     //Set the swerve vectors (Rotation and Velocity)
@@ -333,8 +335,8 @@ public class Drive {
     */
 
     //Gets robot angle relative to the Field
-    public double getFieldAngle(){
-        boolean isRedAlliance = NetworkTableInstance.getDefault().getTable("FMSInfo").getEntry("IsRedAlliance").getBoolean(false);
+    static public double getFieldAngle(){
+        boolean isRedAlliance = DriverStation.getAlliance() == Alliance.Red;
         if(!isRedAlliance){
             return navX.getAngle();
         }else{
@@ -342,10 +344,14 @@ public class Drive {
         }
     }
 
+    public static boolean isBlueAlliance(){
+        return DriverStation.getAlliance() == Alliance.Blue;
+    }
+
     //Update the speeds for autnomous movement
     public void autonUpdate() {
         updateOdometry();
-        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(velY, velX, omega, Rotation2d.fromDegrees(-navX.getAngle()));
+        ChassisSpeeds speeds = ChassisSpeeds.fromFieldRelativeSpeeds(velY, velX, omega, Rotation2d.fromDegrees(-getFieldAngle()));
         SwerveModuleState[] moduleStates = m_kinematics.toSwerveModuleStates(speeds);
     
         // Front left module state

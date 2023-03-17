@@ -10,6 +10,9 @@ import javax.print.attribute.standard.Compression;
 
 import com.ctre.phoenixpro.hardware.TalonFX;
 
+import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.cscore.MjpegServer;
+import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.net.PortForwarder;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
@@ -21,6 +24,7 @@ import frc.robot.Auton.maker;
 import frc.robot.Auton.Autons.balance;
 import frc.robot.Auton.Autons.coneAndBalance;
 import frc.robot.Auton.Autons.cubeAndBalance;
+import frc.robot.Auton.Autons.rightCube;
 import frc.robot.subsystems.*;
 
 /**
@@ -47,6 +51,7 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotInit() {
+    CameraServer.startAutomaticCapture(0);
     PortForwarder.add(5801, "limelight.local", 5801);
     oi = OI.get_Instance();
     pdp = new PowerDistribution(Constants.PDH, PowerDistribution.ModuleType.kRev);
@@ -59,7 +64,7 @@ public class Robot extends TimedRobot {
     //ph.disable();
     drive.coastMode();
     try{
-      autonCommand = new maker("lol this does nothing");
+      autonCommand = new cubeAndBalance("lol this does nothing");
     }catch (IOException e){
       e.printStackTrace();
     }

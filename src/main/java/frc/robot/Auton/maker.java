@@ -35,7 +35,7 @@ public class maker extends SequentialCommandGroup{
                         new intakeOn(6)),
                     new armPos(ElevatorState.LEVEL3)),
                     new toArrayMaker(2.05,0.75,0.5,0.5,0.3,20, Filesystem.getDeployDirectory() + "/score2.json")),
-            new alignAndDriveApril(-6.3, 1, 0.2,0.2),
+            new alignAndDriveApril(-6.3, 1, 0.2,0.2, 10000),
             new releaseGamePiece()
 
                     

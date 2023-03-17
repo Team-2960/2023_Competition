@@ -7,7 +7,10 @@ import frc.robot.subsystems.Lime;
 
 import javax.swing.plaf.metal.MetalBorders.ScrollPaneBorder;
 
+import com.fasterxml.jackson.databind.deser.DataFormatReaders.Match;
+
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -36,13 +39,22 @@ public class alignAndDriveApril extends CommandBase {
     double slowDownDistance = 0.5;
     double tolerance = 0;
     double dx;
+    double target = 11;
+    double timeOut;
 
-    public alignAndDriveApril(double xCoord, double baseSpeed, double slowSpeed, double tolerance) {
+    public alignAndDriveApril(double xCoord, double baseSpeed, double slowSpeed, double tolerance, double timeOut) {
         drive = Drive.get_Instance();
         lime = Lime.get_Instance();
         timer = new Timer();
         visionTimer = new Timer();
         this.xCoord = xCoord;
+        this.timeOut = timeOut;
+        
+        if(!Drive.isBlueAlliance()){
+            this.xCoord *= -1;
+            target *= -1;
+        }
+        
         this.baseSpeed = baseSpeed;
         this.slowSpeed = slowSpeed;
         this.tolerance = tolerance;
@@ -69,7 +81,7 @@ public class alignAndDriveApril extends CommandBase {
      */
     @Override
     public boolean isFinished() {
-        return (visionTimer.get() > 0.2 && Math.toDegrees(Math.abs(angleError)) < 10) && Math.abs(dx) < tolerance;
+        return ((visionTimer.get() > 0.2 && Math.toDegrees(Math.abs(angleError)) < 10) && Math.abs(dx) < tolerance) || DriverStation.getMatchTime() < timeOut;
     }
 
     @Override
@@ -93,28 +105,39 @@ public class alignAndDriveApril extends CommandBase {
 
         double velX = adjSpeed * udx;
         drive.velY = velX;
-        double sigError = 11-lime.getHorOffset();
+        double sigError = target-lime.getHorOffset();
         if(Math.abs(sigError) < 2){
             visionTimer.start();
         }else{
             visionTimer.reset();
         }
         if(drive.getRobotPos().getRotation().getDegrees() < 10){
-            if(timer.get() > 0.2){
-                error = Math.abs(11-lime.getHorOffset());
+            if(timer.get() > 0.2 && lime.isSeeApril()){
+                error = Math.abs(target-lime.getHorOffset());
                 double dir = 1;
                 if(sigError > 0) dir = -1;
                 drive.velX = dir * error/16;
                 drive.omega = 0;
+            }else{
+                drive.velX = 0;
+                drive.velY = 0;
             }
         }else{
         
-        double currTheta = Math.toRadians(drive.getFieldAngle());
+        double currTheta = Math.toRadians(Drive.getFieldAngle());
+
         SmartDashboard.putNumber("curr Theta", currTheta);
 
         double currPosTheta =Math.toRadians(0);
         double currPosPosTheta = Math.toRadians(-360);
         double currPosNegTheta = Math.toRadians(360);
+        
+        if(!Drive.isBlueAlliance()){
+            currPosTheta =Math.toRadians(180);
+            currPosPosTheta = Math.toRadians(-180);
+            currPosNegTheta = Math.toRadians(540);
+        }
+         
 
         double dThetaRegErr = currPosTheta - currTheta;
         double dThetaNegErr = currPosNegTheta - currTheta;
@@ -127,7 +150,8 @@ public class alignAndDriveApril extends CommandBase {
         }else{
             tarTheta = currPosTheta;
         }
-        
+
+
 
         double dTheta = tarTheta - currTheta;
         angleError = dTheta;
