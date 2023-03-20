@@ -16,8 +16,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.*;
 
-
-
 public class alignAndDriveApril extends CommandBase {
 
     boolean isFinished;
@@ -89,34 +87,39 @@ public class alignAndDriveApril extends CommandBase {
         SmartDashboard.putNumber("angle error", Math.toDegrees(angleError));
         SmartDashboard.putNumber("vision timer", visionTimer.get());
         SmartDashboard.putNumber("dx a", dx);
+
         double currXRobot = drive.getRobotPos().getX();
         angleError = Math.abs(drive.getRobotPos().getRotation().getRadians() - 0);
+
         double tarPointX = xCoord;
         dx = tarPointX - currXRobot;
         double mag = Math.sqrt(Math.pow(dx, 2));
-        double udx = dx/mag;
+        double udx = dx / mag;
 
-        if(mag < slowDownDistance){
-            double slope = (baseSpeed - slowSpeed)/slowDownDistance;
+        // Calculate robot speed
+        if (mag < slowDownDistance) {
+            double slope = (baseSpeed - slowSpeed) / slowDownDistance;
             adjSpeed = slowSpeed + mag * slope;
-        }else{
+        } else {
             adjSpeed = baseSpeed;
         }
 
+        //
         double velX = adjSpeed * udx;
         drive.velY = velX;
         double sigError = target-lime.getHorOffset();
         if(Math.abs(sigError) < 2){
             visionTimer.start();
-        }else{
+        } else {
             visionTimer.reset();
         }
         if(drive.getRobotPos().getRotation().getDegrees() < 10){
             if(timer.get() > 0.2 && lime.isSeeApril()){
                 error = Math.abs(target-lime.getHorOffset());
                 double dir = 1;
-                if(sigError > 0) dir = -1;
-                drive.velX = dir * error/16;
+                if (sigError > 0)
+                    dir = -1;
+                drive.velX = dir * error / 16;
                 drive.omega = 0;
             }else{
                 drive.velX = 0;
@@ -157,24 +160,25 @@ public class alignAndDriveApril extends CommandBase {
         angleError = dTheta;
         double omega = 0;
 
-        //NOTE tarTheta IS IN DEGREES BUT OUTPUT WILL BE IN RAD/SEC
-        //This part sets the omega based on how far we are from the desired theta
-        if(Math.abs(dTheta) < Constants.thresholdT1){
-            omega = Constants.tVel1;
-        }else if(Math.abs(dTheta) <Constants.thresholdT2){
-            omega = Constants.tVel2;
-        }else if(Math.abs(dTheta) < Constants.thresholdT3){
-            omega = Constants.tVel3;
-        }else{
-            omega = Constants.tVelOutside;
-        }
+            // NOTE tarTheta IS IN DEGREES BUT OUTPUT WILL BE IN RAD/SEC
+            // This part sets the omega based on how far we are from the desired theta
+            if (Math.abs(dTheta) < Constants.thresholdT1) {
+                omega = Constants.tVel1;
+            } else if (Math.abs(dTheta) < Constants.thresholdT2) {
+                omega = Constants.tVel2;
+            } else if (Math.abs(dTheta) < Constants.thresholdT3) {
+                omega = Constants.tVel3;
+            } else {
+                omega = Constants.tVelOutside;
+            }
 
-        //THE SIGNS MIGHT NEED TO BE FLIPPED
-        //THIS PART OF THE CODE ADJUSTS THE DIRECTION OF THE OMEGA SO THAT IT GOES THE CORRECT DIRECTION BASED ON WHETHER OUR ERROR IS POSITIVE OR NEGATIVE
-         if(dTheta < 0){
-             omega = -1 * omega;
-          }
-          drive.omega = omega;
+            // THE SIGNS MIGHT NEED TO BE FLIPPED
+            // THIS PART OF THE CODE ADJUSTS THE DIRECTION OF THE OMEGA SO THAT IT GOES THE
+            // CORRECT DIRECTION BASED ON WHETHER OUR ERROR IS POSITIVE OR NEGATIVE
+            if (dTheta < 0) {
+                omega = -1 * omega;
+            }
+            drive.omega = omega;
         }
     }
 
