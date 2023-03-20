@@ -41,7 +41,7 @@ public class intakeOff extends CommandBase {
      */
     @Override
     public boolean isFinished() {
-        intake.setIntakeAll(IntakeDirection.OFF);
+        intake.setIntakeAll(IntakeDirection.OFF, 0);
         return true;
     }
 

@@ -86,16 +86,16 @@ public class Intake {
         }
     }
 
-    public void setIntakeAll(IntakeDirection dir){
+    public void setIntakeAll(IntakeDirection dir, double intakeSpeed){
         if(dir == IntakeDirection.FORWARD){
-            setIntakeSpeed(-1);
+            setIntakeSpeed(-intakeSpeed);
             setFlappySpeed(1);
             setConveyorSpeed(1);
             conveyorOn = true;
             conveyorTimer.start();
             conveyorTimer.reset();
         }else if(dir == IntakeDirection.REVERSE){
-            setIntakeSpeed(1);
+            setIntakeSpeed(intakeSpeed);
             setFlappySpeed(-1);
             setConveyorSpeed(-1);
             conveyorOn = false;

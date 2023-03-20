@@ -167,7 +167,7 @@ public class ElevatorClaw {
             targetPosition = Constants.cFeeder;
         }
         if (currentState != targetState) {
-            if (currentState == ElevatorState.HOME && getGripperPos() == Value.kForward) {
+            if (currentState == ElevatorState.HOME) {
                 gripperTimer.start();
                 gripperTimer.reset();
             }
@@ -271,8 +271,6 @@ public class ElevatorClaw {
     public void checkStopperPosition() {
         if (targetState == ElevatorState.HOME && currentState == ElevatorState.HOME) {
             setStopperState(Value.kForward);
-            stopperTimer.reset();
-            stopperTimer.start();
         }else{
             setStopperState(Value.kReverse);
         }
@@ -364,7 +362,7 @@ public class ElevatorClaw {
         }
         gripperTimer.start();
         if (gripperTimer.get() > 0.5){
-            if(enableElevatorPID && stopperTimer.get() > 1){
+            if(enableElevatorPID){
                 setElevatorPosition(elevatorTarget);
             }
             if (enableWristAuto) {

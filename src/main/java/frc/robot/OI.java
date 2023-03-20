@@ -141,12 +141,13 @@ public class OI {
         }
 
         if (operatorControl.getRawAxis(2)>0.1){
-            intake.setIntakeAll(Intake.IntakeDirection.FORWARD);
+            intake.setIntakeAll(Intake.IntakeDirection.FORWARD, operatorControl.getRawAxis(2));
+            
         }else if(operatorControl.getRawAxis(3)>0.1){
-            intake.setIntakeAll(Intake.IntakeDirection.REVERSE);
+            intake.setIntakeAll(Intake.IntakeDirection.REVERSE, operatorControl.getRawAxis(3));
         }
         else {
-            intake.setIntakeAll(Intake.IntakeDirection.OFF);
+            intake.setIntakeAll(Intake.IntakeDirection.OFF, 0);
         }          
     }
     
@@ -356,14 +357,14 @@ public class OI {
             intake.setIntakeState(Value.kReverse);
         }
 
-        if (testJoy2.getRawButton(5)){
+       /*  if (testJoy2.getRawButton(5)){
             intake.setIntakeAll(Intake.IntakeDirection.FORWARD);
         }else if(testJoy2.getRawButton(6)){
             intake.setIntakeAll(Intake.IntakeDirection.REVERSE);
         }
         else {
             intake.setIntakeAll(Intake.IntakeDirection.OFF);
-        }
+        }*/
 /* 
         if (testJoy1.getRawButton(1)){
             elevatorClaw.setElevatorPosition(Constants.cHome);

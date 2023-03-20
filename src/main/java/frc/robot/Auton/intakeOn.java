@@ -54,7 +54,7 @@ public class intakeOn extends CommandBase {
 
     @Override
     public void execute() {
-        intake.setIntakeAll(IntakeDirection.FORWARD);
+        intake.setIntakeAll(IntakeDirection.FORWARD, 1);
     }
 
     /**
@@ -62,7 +62,7 @@ public class intakeOn extends CommandBase {
      */
     @Override
     public void end(boolean interrupte) {
-        intake.setIntakeAll(IntakeDirection.OFF);
+        intake.setIntakeAll(IntakeDirection.OFF, 0);
         intake.setIntakeState(Value.kReverse);
         intake.setConveyorSpeed(0);
     }

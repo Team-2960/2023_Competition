@@ -24,7 +24,7 @@ public class cubeAndBalance extends SequentialCommandGroup{
         addCommands(
             new grabGamePiece(),
             new armPos(ElevatorState.LEVEL3),
-            new alignAndDriveApril(-6.3, 1, 0.2,0.2,10),
+            new alignAndDriveApril(-6.3, 1, 0.2,0.2,11),
             new releaseGamePiece(),
             new ParallelCommandGroup(
                 new SequentialCommandGroup(
