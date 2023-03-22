@@ -144,13 +144,18 @@ public class toArrayMaker  extends CommandBase {
         double udy = dy/mag;
 
         double adjSpeed = baseSpeed;
+        double distLeft = mag;
+        for(int i = currTarIndex+1; i < listOfCoords.size()-1; i++){
+            double dyt = listOfCoords.get(i).getY() - listOfCoords.get(i+1).getY();
+            double dxt = listOfCoords.get(i).getX() - listOfCoords.get(i+1).getX();
+            double magt = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+            distLeft += magt;
+        }
 
-
-
-        /*if(mag < slowDownDistance){
+        if(distLeft < slowDownDistance){
             double slope = (baseSpeed - slowSpeed)/slowDownDistance;
-            adjSpeed = slowSpeed + mag * slope;
-        }*/
+            adjSpeed = slowSpeed + distLeft * slope;
+        }
 
         double velY = adjSpeed * udx;
         double velX = adjSpeed * udy;

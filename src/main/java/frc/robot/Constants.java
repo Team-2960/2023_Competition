@@ -44,7 +44,7 @@ public class Constants {
 
     //MOTORS
     public final static int mRElevator = 13;
-    public final static int mLElevator =14;
+    //public final static int mLElevator =14;
     public final static int mFlapperWheels = 15;
     public final static int mIntakeWheels = 16;
     public final static int mConveyor = 17;
@@ -52,7 +52,7 @@ public class Constants {
     //SOLENOID
     public final static int[] sGripperID = {4,5}; 
     public final static int[] sIntakeID = {2,3};
-    public final static int[] sWristID = {6,7};
+    public final static int[] sWristID = {7,6};
     public final static int[] sStopperID = {0,1};
 
     //MISC CAN
@@ -66,8 +66,8 @@ public class Constants {
 
     //Elevator Speed PID
     public final static double elvSpeedP = 0.00002;//0.000017;
-    public final static double elvSpeedI= 0;
-    public final static double elvSpeedD = 0;
+    public final static double elvSpeedI= 0.000003;
+    public final static double elvSpeedD = 0.000002;
 
     //Elevator Level Positions
     public final static double cHome = -100;

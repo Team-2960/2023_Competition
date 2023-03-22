@@ -23,11 +23,15 @@ public class OI {
     private static Joystick testJoy2;
     private static Joystick manualControl;
 
+    //Manual Variables
+    private static boolean isManualWrist;
+
     private OI() {
         // Instantiate the subsystems
         drive = Drive.get_Instance();
         elevatorClaw = ElevatorClaw.get_Instance();
         intake = Intake.get_Instance();
+        isManualWrist = false;
         // Create Joysticks
         driverControl = new Joystick(Constants.driverControlID);
         operatorControl = new Joystick(Constants.operatorControlID);
@@ -75,6 +79,12 @@ public class OI {
         //Drive Code
         if(driverControl.getRawButton(1)){
             drive.centerOnPole();
+        }else if(driverControl.getRawAxis(3) > 0.2){
+            double amp = driverControl.getRawAxis(3) + 1;
+            drive.setVector(driveAngle(driverControl.getRawAxis(0), driverControl.getRawAxis(1)),
+            Math.sqrt(Math.pow(Math.abs(driverControl.getRawAxis(0) * amp), 2)
+                    + Math.pow(Math.abs(driverControl.getRawAxis(1) * amp), 2)),
+                 driverControl.getRawAxis(4) * -2);
         }else{
             drive.setVector(driveAngle(driverControl.getRawAxis(0), driverControl.getRawAxis(1)),
                         Math.sqrt(Math.pow(Math.abs(driverControl.getRawAxis(0)), 2)
@@ -84,19 +94,24 @@ public class OI {
         //Elevator Control
        if (operatorControl.getRawButton(1)){
             elevatorClaw.setElevatorState(ElevatorClaw.ElevatorState.HOME);
+            isManualWrist = false;
             //elevatorClaw.setTargetPosition(Constants.cHome);
 
         }else if(operatorControl.getRawButton(3)){
             elevatorClaw.setElevatorState(ElevatorClaw.ElevatorState.LEVEL1);
+            isManualWrist = false;
 
         }else if(operatorControl.getRawButton(4)){
             elevatorClaw.setElevatorState(ElevatorClaw.ElevatorState.LEVEL2);
+            isManualWrist = false;
             
         }else if(operatorControl.getRawButton(2)){
             elevatorClaw.setElevatorState(ElevatorClaw.ElevatorState.LEVEL3);
+            isManualWrist = false;
         
         }else if(operatorControl.getRawButton(10)){
             elevatorClaw.setElevatorState(ElevatorClaw.ElevatorState.FEEDER);
+            isManualWrist = false;
         }
         //Elevator Adjust
         if(operatorControl.getRawAxis(1) > 0.2){
@@ -117,10 +132,14 @@ public class OI {
         if (operatorControl.getPOV() == 270) {
             elevatorClaw.setWristState(Value.kForward);
             elevatorClaw.disableWristAuto(true);
+            isManualWrist = true;
         }
-        if (operatorControl.getPOV() == 90) {
+        else if(operatorControl.getPOV() == 90) {
             elevatorClaw.setWristState(Value.kReverse);
             elevatorClaw.disableWristAuto(true);
+            isManualWrist = true;
+        }else if(isManualWrist){
+            elevatorClaw.setWristState(Value.kOff);
         }
 
         // A button is stopper down, B button is stopper up

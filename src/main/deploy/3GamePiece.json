@@ -1,0 +1,54 @@
+[
+    {
+        "size": 6
+    },
+    {
+        "x": -6.188,
+        "y": 0.972,
+        "theta": 0,
+        "tolerance": 0.2,
+        "isSeeApril": false
+
+    },
+    {
+        "x": -3.99,
+        "y": 1.2,
+        "theta": 0,
+        "tolerance": 0.3,
+        "isSeeApril": false
+
+    },
+    {
+        "x": -1.977,
+        "y": 1.24,
+        "theta": 0,
+        "tolerance": 0.2,
+        "isSeeApril": false
+
+    },
+    {
+        "x": -3.99,
+        "y": 1.2,
+        "theta": 0,
+        "tolerance": 0.3,
+        "isSeeApril": false
+
+    },
+    {
+        "x": -6.087,
+        "y": 0.994,
+        "theta": 0,
+        "tolerance": 0.2,
+        "isSeeApril": false
+
+    },
+    {
+        "x": -6.187,
+        "y": 0.494,
+        "theta": 0,
+        "tolerance": 0.1,
+        "isSeeApril": false
+
+    }
+
+]

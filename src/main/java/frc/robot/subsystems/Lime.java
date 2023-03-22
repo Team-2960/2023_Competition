@@ -35,7 +35,7 @@ public class Lime {
         return NetworkTableInstance.getDefault().getTable("limelight").getEntry("tv").getDouble(0) == 1;
     }
     public boolean isSeeApril(){
-        return NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(0) > 0.5;
+        return NetworkTableInstance.getDefault().getTable("limelight").getEntry("ta").getDouble(0) > 0.3;
     }
     public double getX(){
     try{
