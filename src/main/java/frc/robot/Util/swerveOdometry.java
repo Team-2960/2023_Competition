@@ -178,25 +178,25 @@ public class swerveOdometry {
         x += dx * timeStep;
         y += dy * timeStep;
         theta = gyroHeadingRad;
-        /*
-         * xLog.append(x);
-         * yLog.append(y);
-         * tLog.append(theta);
-         * 
-         * strCos.append(str * Math.cos(gyroHeadingRad));
-         * strSin.append(str * Math.sin(gyroHeadingRad));
-         * fwdCos.append(fwd * Math.cos(gyroHeadingRad));
-         * fwdSin.append(- fwd * Math.sin(gyroHeadingRad));
-         * 
-         * BLA.append(bl.angle.getDegrees());
-         * BLD.append(bl.speedMetersPerSecond);
-         * BRA.append(br.angle.getDegrees());
-         * BRD.append(br.speedMetersPerSecond);
-         * FLA.append(fl.angle.getDegrees());
-         * FLD.append(fl.speedMetersPerSecond);
-         * FRA.append(fr.angle.getDegrees());
-         * FRD.append(fr.speedMetersPerSecond);
-         */
+        
+        xLog.append(x);
+        yLog.append(y);
+        tLog.append(theta);
+        
+        strCos.append(str * Math.cos(gyroHeadingRad));
+        strSin.append(str * Math.sin(gyroHeadingRad));
+        fwdCos.append(fwd * Math.cos(gyroHeadingRad));
+        fwdSin.append(- fwd * Math.sin(gyroHeadingRad));
+        
+        BLA.append(bl.angle.getDegrees());
+        BLD.append(bl.speedMetersPerSecond);
+        BRA.append(br.angle.getDegrees());
+        BRD.append(br.speedMetersPerSecond);
+        FLA.append(fl.angle.getDegrees());
+        FLD.append(fl.speedMetersPerSecond);
+        FRA.append(fr.angle.getDegrees());
+        FRD.append(fr.speedMetersPerSecond);
+        
 
         SmartDashboard.putBoolean("is see april", lime.isSeeApril());
         if (lime.isSeeApril() && lime.getPipeline() != 1) {

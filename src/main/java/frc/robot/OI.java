@@ -78,14 +78,16 @@ public class OI {
     public void regularOI(){
         //Drive Code
         if(driverControl.getRawButton(1)){
-            drive.centerOnPole();
+            drive.isXWheels = true;
         }else if(driverControl.getRawAxis(3) > 0.2){
+            drive.isXWheels = false;
             double amp = driverControl.getRawAxis(3) + 1;
             drive.setVector(driveAngle(driverControl.getRawAxis(0), driverControl.getRawAxis(1)),
             Math.sqrt(Math.pow(Math.abs(driverControl.getRawAxis(0) * amp), 2)
                     + Math.pow(Math.abs(driverControl.getRawAxis(1) * amp), 2)),
                  driverControl.getRawAxis(4) * -2);
         }else{
+            drive.isXWheels = false;
             drive.setVector(driveAngle(driverControl.getRawAxis(0), driverControl.getRawAxis(1)),
                         Math.sqrt(Math.pow(Math.abs(driverControl.getRawAxis(0)), 2)
                                 + Math.pow(Math.abs(driverControl.getRawAxis(1)), 2)),

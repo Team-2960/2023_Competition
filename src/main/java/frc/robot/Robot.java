@@ -73,7 +73,7 @@ public class Robot extends TimedRobot {
     // ph.disable();
     drive.coastMode();
     try {
-      autonCommand = new score2("lol this does nothing");
+      autonCommand = new cubeAndBalance("lol this does nothing");
     } catch (IOException e) {
       e.printStackTrace();
     }

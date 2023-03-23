@@ -2,31 +2,31 @@ package frc.robot.Auton;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.ElevatorClaw;
 import frc.robot.subsystems.Lime;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.*;
 
 
 
-public class xWheels extends CommandBase {
+public class wristUp extends CommandBase {
 
     boolean isFinished;
 
-    Drive drive;
+    ElevatorClaw elevatorClaw;
 
     Timer timer;
-    public xWheels() {
-        drive = Drive.get_Instance();
+    public wristUp() {
+        elevatorClaw = ElevatorClaw.get_Instance();
         timer = new Timer();
         System.out.println("xWheels");
     }
 
     @Override
     public void initialize() {
-        drive.velX = 0;
-        drive.velY = 0;
         timer.start();
     }
 
@@ -48,7 +48,7 @@ public class xWheels extends CommandBase {
 
     @Override
     public void execute() {
-        Drive.isXWheels = true;
+        elevatorClaw.setWristState(Value.kForward);
     }
 
     /**
@@ -56,5 +56,6 @@ public class xWheels extends CommandBase {
      */
     @Override
     public void end(boolean interrupte) {
+        Drive.isXWheels = false;
     }
 }
