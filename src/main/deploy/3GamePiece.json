@@ -1,18 +1,11 @@
 [
     {
-        "size": 6
+        "size": 5
     },
-    {
-        "x": -6.188,
-        "y": 0.972,
-        "theta": 0,
-        "tolerance": 0.2,
-        "isSeeApril": false
 
-    },
     {
         "x": -3.99,
-        "y": 1.2,
+        "y": 0.9,
         "theta": 0,
         "tolerance": 0.3,
         "isSeeApril": false
@@ -20,7 +13,7 @@
     },
     {
         "x": -1.977,
-        "y": 1.24,
+        "y": 0.924,
         "theta": 0,
         "tolerance": 0.2,
         "isSeeApril": false
@@ -28,7 +21,7 @@
     },
     {
         "x": -3.99,
-        "y": 1.2,
+        "y": 0.9,
         "theta": 0,
         "tolerance": 0.3,
         "isSeeApril": false
@@ -43,10 +36,10 @@
 
     },
     {
-        "x": -6.187,
+        "x": -6.287,
         "y": 0.494,
         "theta": 0,
-        "tolerance": 0.1,
+        "tolerance":0.2,
         "isSeeApril": false
 
     }

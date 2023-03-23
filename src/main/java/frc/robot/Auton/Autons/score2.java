@@ -24,21 +24,25 @@ public class score2 extends SequentialCommandGroup{
         addCommands(
             new grabGamePiece(),
             new armPos(ElevatorState.LEVEL3),
-            new alignAndDriveVisionRight(-6.6, 1, 0.3,0.1, 0,6),
+            new setVisionPipeline(1),
+            new alignAndDriveVisionRight(-6.45, 1, 0.3,0.1, 0,6),
             new releaseGamePiece(),
             new wait(0.2),
+            new setVisionPipeline(0),
             new ParallelCommandGroup(
                 new SequentialCommandGroup(
                     new pastXPosition(5.5, false),
                     new ParallelCommandGroup(
                         new armPos(ElevatorState.HOME),
-                        new intakeOn(6)),
-                    new armPos(ElevatorState.LEVEL3)),
-                    new toArrayMaker(2.05,0.75,0.5,0.5,0.3,20, Filesystem.getDeployDirectory() + "/score2.json")),
-            new alignAndDriveApril(-6.3, 1, 0.2,0.2, 10000),
+                        new intakeOn(4)),
+                    new armPos(ElevatorState.LEVEL3)
+                    ),
+                new SequentialCommandGroup(
+                    new toArrayMaker(2.05,0.75,1.5,0.5,0.3,20, Filesystem.getDeployDirectory() + "/score2.json"),
+                    new driveUntilApril(-2, 0))),
+            new setVisionPipeline(2),
+            new alignAndDriveApril(-6.4, 1, 0.2,0.1, 0),//needs to be 10000
             new releaseGamePiece()
-
-                    
         );
     }
 }

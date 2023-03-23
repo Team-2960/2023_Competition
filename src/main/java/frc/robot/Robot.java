@@ -25,12 +25,16 @@ import frc.robot.Auton.Autons.balance;
 import frc.robot.Auton.Autons.coneAndBalance;
 import frc.robot.Auton.Autons.cubeAndBalance;
 import frc.robot.Auton.Autons.rightCube;
+import frc.robot.Auton.Autons.score2;
 import frc.robot.subsystems.*;
 
 /**
- * The VM is configured to automatically run this class, and to call the functions corresponding to
- * each mode, as described in the TimedRobot documentation. If you change the name of this class or
- * the package after creating this project, you must also update the build.gradle file in the
+ * The VM is configured to automatically run this class, and to call the
+ * functions corresponding to
+ * each mode, as described in the TimedRobot documentation. If you change the
+ * name of this class or
+ * the package after creating this project, you must also update the
+ * build.gradle file in the
  * project.
  */
 public class Robot extends TimedRobot {
@@ -43,10 +47,15 @@ public class Robot extends TimedRobot {
   private Command autonCommand;
   private Lime lime;
 
-  public Robot(){
+  public Robot() {
+    addPeriodic(() -> {
+      drive.updateOdometry();
+    }, 0.005);
   }
+
   /**
-   * This function is run when the robot is first started up and should be used for any
+   * This function is run when the robot is first started up and should be used
+   * for any
    * initialization code.
    */
   @Override
@@ -56,16 +65,16 @@ public class Robot extends TimedRobot {
     oi = OI.get_Instance();
     pdp = new PowerDistribution(Constants.PDH, PowerDistribution.ModuleType.kRev);
     pdp.setSwitchableChannel(true);
-    ph = new Compressor(18,PneumaticsModuleType.REVPH);
+    ph = new Compressor(18, PneumaticsModuleType.REVPH);
     intake = Intake.get_Instance();
     elevatorClaw = ElevatorClaw.get_Instance();
     drive = Drive.get_Instance();
     lime = Lime.get_Instance();
-    //ph.disable();
+    // ph.disable();
     drive.coastMode();
-    try{
-      autonCommand = new maker("lol this does nothing");
-    }catch (IOException e){
+    try {
+      autonCommand = new score2("lol this does nothing");
+    } catch (IOException e) {
       e.printStackTrace();
     }
   }
@@ -74,7 +83,7 @@ public class Robot extends TimedRobot {
   public void robotPeriodic() {
     drive.updateOdometry();
     CommandScheduler.getInstance().run();
-    
+
     elevatorClaw.periodic();
   }
 
@@ -82,7 +91,8 @@ public class Robot extends TimedRobot {
   public void autonomousInit() {
     drive.breakMode();
     elevatorClaw.setElevatorCoastMode();
-    if(autonCommand != null) autonCommand.schedule();
+    if (autonCommand != null)
+      autonCommand.schedule();
   }
 
   @Override
@@ -100,8 +110,8 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     oi.regularOI();
     drive.periodicTele();
-    //oi.testOI();
-    //oi.soberOI();
+    // oi.testOI();
+    // oi.soberOI();
     intake.periodic();
     elevatorClaw.periodic();
   }
@@ -113,19 +123,23 @@ public class Robot extends TimedRobot {
   }
 
   @Override
-  public void disabledPeriodic() {}
-
-  @Override
-  public void testInit() {}
-
-  @Override
-  public void testPeriodic() {
-    //elevatorClaw.periodic();
+  public void disabledPeriodic() {
   }
 
   @Override
-  public void simulationInit() {}
+  public void testInit() {
+  }
 
   @Override
-  public void simulationPeriodic() {}
+  public void testPeriodic() {
+    // elevatorClaw.periodic();
+  }
+
+  @Override
+  public void simulationInit() {
+  }
+
+  @Override
+  public void simulationPeriodic() {
+  }
 }

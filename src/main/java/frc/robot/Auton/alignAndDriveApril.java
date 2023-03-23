@@ -24,6 +24,7 @@ public class alignAndDriveApril extends CommandBase {
     Lime lime;
 
     Timer timer;
+    Timer endTimer;
 
     Timer visionTimer;
 
@@ -45,6 +46,7 @@ public class alignAndDriveApril extends CommandBase {
         lime = Lime.get_Instance();
         timer = new Timer();
         visionTimer = new Timer();
+        endTimer = new Timer();
         this.xCoord = xCoord;
         this.timeOut = timeOut;
         
@@ -79,7 +81,7 @@ public class alignAndDriveApril extends CommandBase {
      */
     @Override
     public boolean isFinished() {
-        return ((visionTimer.get() > 0.2 && Math.toDegrees(Math.abs(angleError)) < 10) && Math.abs(dx) < tolerance) || DriverStation.getMatchTime() < timeOut;
+        return (((visionTimer.get() > 0.2 && Math.toDegrees(Math.abs(angleError)) < 7) && Math.abs(dx) < tolerance)) || endTimer.get() > .5; //|| DriverStation.getMatchTime() < timeOut;
     }
 
     @Override
@@ -108,10 +110,15 @@ public class alignAndDriveApril extends CommandBase {
         double velX = adjSpeed * udx;
         drive.velY = velX;
         double sigError = target-lime.getHorOffset();
-        if(Math.abs(sigError) < 2){
+        if(Math.abs(sigError) < 4){
             visionTimer.start();
         } else {
             visionTimer.reset();
+        }
+        if(!lime.isSeeApril()){
+            endTimer.start();
+        }else{
+            endTimer.reset();
         }
         if(drive.getRobotPos().getRotation().getDegrees() < 10){
             if(timer.get() > 0.2 && lime.isSeeApril()){

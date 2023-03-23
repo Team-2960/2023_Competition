@@ -22,22 +22,33 @@ import edu.wpi.first.wpilibj.Filesystem;
 public class maker extends SequentialCommandGroup{
     public maker(String url) throws IOException{
         addCommands(
+            new setVisionPipeline(0),
             new grabGamePiece(),
             new armPos(ElevatorState.LEVEL1),
             new releaseGamePiece(),
             new ParallelCommandGroup(
                 new SequentialCommandGroup(
                     new pastXPosition(5.5, false),
-                    new ParallelCommandGroup(
-                        new armPos(ElevatorState.HOME),
-                        new intakeOn(3),
-                        new setVisionPipeline(2),
-                        new armPos(ElevatorState.LEVEL1))),
-                new toArrayMaker(1.5,0.75,1,0.5,0.3,20, Filesystem.getDeployDirectory() + "/3GamePiece.json"))/*,
-            new alignAndDriveApril(-6.3, 1, 0.2,0.2, 10000),
-            new releaseGamePiece()
-        */
-                    
+                    new armPos(ElevatorState.HOME),
+                    new releaseGamePiece(),
+                    new intakeOn(6),
+                    new setVisionPipeline(2),
+                    new armPos(ElevatorState.LEVEL1)),
+                new toArrayMaker(2,0.75,1,0.5,0.3,20, Filesystem.getDeployDirectory() + "/3GamePiece.json")),
+            new setVisionPipeline(0),
+            new grabGamePiece(),
+            new armPos(ElevatorState.LEVEL1),
+            new releaseGamePiece(),
+            new wait(1),
+            new ParallelCommandGroup(
+                new SequentialCommandGroup(
+                    new pastXPosition(5.5, false),
+                    new armPos(ElevatorState.HOME),
+                    new intakeOn(6),
+                    new setVisionPipeline(2),
+                    new armPos(ElevatorState.LEVEL1)),
+                new toArrayMaker(1.5,0.75,1,0.5,0.3,20, Filesystem.getDeployDirectory() + "/3GamePiece pt2.json")),
+            new releaseGamePiece()                    
         );
     }
 }

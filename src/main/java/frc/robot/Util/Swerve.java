@@ -179,7 +179,7 @@ public class Swerve {
     }
 
     public SwerveModulePosition getPosition() {
-        return new SwerveModulePosition(getMetersPerSec(), new Rotation2d(Math.toRadians(angleEncoder.getAbsolutePosition()-90)));
+        return new SwerveModulePosition(getDriveEncoder() * Constants.positionToMeters, new Rotation2d(Math.toRadians(angleEncoder.getAbsolutePosition()-90)));
     }
 
     public String toString(){

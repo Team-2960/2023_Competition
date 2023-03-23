@@ -1,5 +1,8 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+
 public class Constants { 
     //JOYSTICKS
     public final static int driverControlID = 0;
@@ -9,7 +12,19 @@ public class Constants {
     public final static int manualControl = 4;
 
     //SWERVE-AUTON
-    public final static double velocityToMeters = (10/8.14*Math.PI*3.9*0.0254)/(2048);
+    public final static int ticksPerRev = 2048;
+    public final static double metersPerInch = 0.0254;
+    public final static double wheelDiameter = Math.PI*3.9 * metersPerInch;
+    public final static double gearReduction = 8.14;
+
+    
+
+
+
+    public final static double velocityToMeters = (10*(1/gearReduction)*wheelDiameter)/(ticksPerRev);
+    public final static double positionToMeters = (1/gearReduction*wheelDiameter)/(ticksPerRev);
+
+
 
     //Theta Thresholding
     public static double thresholdT1 = 0.075;
@@ -66,14 +81,14 @@ public class Constants {
 
     //Elevator Speed PID
     public final static double elvSpeedP = 0.00002;//0.000017;
-    public final static double elvSpeedI= 0.000003;
-    public final static double elvSpeedD = 0.000002;
+    public final static double elvSpeedI= 0.0;//0.000003;
+    public final static double elvSpeedD = 0.0;//0.000002;
 
     //Elevator Level Positions
     public final static double cHome = -100;
-    public final static double cLevel1 = 22000;
+    public final static double cLevel1 = 27000;
     public final static double cLevel2 = 22000;
-    public final static double cLevel3 = 44000;
+    public final static double cLevel3 = 41000;
     public final static double cFeeder = 5000;
     //elevator Limits
     public final static double elevatorMaxPos = 45000;
@@ -112,6 +127,7 @@ public class Constants {
     public static double blHome = -203.64+90;//-73.81;
     public static double brHome = -176.74-180+90;//-157.03;
     public static double modLoc = 12  * 0.0254;
+    //Swerve Drive Kinematics
 
-    //
+
 }

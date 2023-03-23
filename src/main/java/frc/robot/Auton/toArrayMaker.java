@@ -15,10 +15,11 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.Drive;
+import frc.robot.subsystems.Lime;
 import frc.robot.Util.swerveOdometry;
 import frc.robot.Util.*;
 
-public class toArrayMaker  extends CommandBase {
+public class toArrayMaker extends CommandBase {
     ObjectMapper objectMapper;
     ArrayList<autoPathPoint> listOfCoords;
 
@@ -26,7 +27,7 @@ public class toArrayMaker  extends CommandBase {
     static int currIndexInner;
     static int currIndexOuter;
 
-    //new method vars
+    // new method vars
     ArrayList<Boolean> crit;
     double critTolerance = 0.2;
     double nonCritTolerance = 0.5;
@@ -38,22 +39,21 @@ public class toArrayMaker  extends CommandBase {
     double critDisTolerance = 0.2;
     double regDisTolerance = 0.4;
 
-
-
     Drive drive;
+    Lime lime;
     double baseSpeed;
     double slowDownDistance;
     double toleranceOuter;
     double toleranceInner;
     double angTolerance;
 
-    //Suppression Vars
+    // Suppression Vars
     double prevudxO = 0.5;
     double prevudyO = 0.5;
     double prevudxI = 0.5;
     double prevudyI = 0.5;
 
-    //New Suppression Vars
+    // New Suppression Vars
     double prevFinalX = 1;
     double prevFinalY = 1;
     double uVectorFinalX = 0;
@@ -65,8 +65,10 @@ public class toArrayMaker  extends CommandBase {
     boolean isInRange = true;
 
     boolean isFinish = false;
-    public toArrayMaker(double baseSpeed, double slowSpeed, double slowDownDistance, double toleranceOuter, double toleranceInner, double angTolerance, String URL){
-        //Create ArrayList from JSON File
+
+    public toArrayMaker(double baseSpeed, double slowSpeed, double slowDownDistance, double toleranceOuter,
+            double toleranceInner, double angTolerance, String URL) {
+        // Create ArrayList from JSON File
         objectMapper = new ObjectMapper();
         JsonNode node = null;
         try {
@@ -81,22 +83,21 @@ public class toArrayMaker  extends CommandBase {
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        
+
         int sizeOfPath = node.get(0).get("size").asInt();
 
         listOfCoords = new ArrayList<autoPathPoint>();
 
-        for(int i = 1; i <= sizeOfPath; i++){
+        for (int i = 1; i <= sizeOfPath; i++) {
             double x = node.get(i).get("x").asDouble();
             double y = node.get(i).get("y").asDouble();
             double theta = node.get(i).get("theta").asDouble();
             double tolerance = node.get(i).get("tolerance").asDouble();
             boolean isSeeApril = node.get(i).get("isSeeApril").asBoolean();
-            autoPathPoint tempPoint = new autoPathPoint(new Pose2d(x,y,Rotation2d.fromDegrees(theta)), tolerance, isSeeApril);
+            autoPathPoint tempPoint = new autoPathPoint(new Pose2d(x, y, Rotation2d.fromDegrees(theta)), tolerance,
+                    isSeeApril);
             listOfCoords.add(tempPoint);
         }
-
-
 
         this.baseSpeed = baseSpeed;
         this.slowSpeed = slowSpeed;
@@ -107,6 +108,7 @@ public class toArrayMaker  extends CommandBase {
         currIndexInner = 0;
         currIndexOuter = 0;
         drive = Drive.get_Instance();
+        lime = Lime.get_Instance();
         System.out.println("To array");
 
     }
@@ -121,14 +123,15 @@ public class toArrayMaker  extends CommandBase {
     public boolean isFinished() {
         return isFinish;
     }
+
     @Override
     public void execute() {
-                
+
         double currXRobot = drive.getRobotPos().getX();
         double currYRobot = drive.getRobotPos().getY();
 
         double tarPointX = listOfCoords.get(currTarIndex).getX();
-        if(!Drive.isBlueAlliance()){
+        if (!Drive.isBlueAlliance()) {
             tarPointX *= -1;
         }
         double tarPointY = listOfCoords.get(currTarIndex).getY();
@@ -136,39 +139,40 @@ public class toArrayMaker  extends CommandBase {
         SmartDashboard.putNumber("tarx", tarPointX);
         SmartDashboard.putNumber("tary", tarPointY);
 
-
         double dx = tarPointX - currXRobot;
         double dy = tarPointY - currYRobot;
         double mag = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
-        double udx = dx/mag;
-        double udy = dy/mag;
+        double udx = dx / mag;
+        double udy = dy / mag;
 
         double adjSpeed = baseSpeed;
+
         double distLeft = mag;
-        for(int i = currTarIndex+1; i < listOfCoords.size()-1; i++){
-            double dyt = listOfCoords.get(i).getY() - listOfCoords.get(i+1).getY();
-            double dxt = listOfCoords.get(i).getX() - listOfCoords.get(i+1).getX();
-            double magt = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+        for (int i = currTarIndex + 1; i < listOfCoords.size()-1; i++) {
+            double dyt = listOfCoords.get(i).getY() - listOfCoords.get(i + 1).getY();
+            double dxt = listOfCoords.get(i).getX() - listOfCoords.get(i + 1).getX();
+            double magt = Math.sqrt(Math.pow(dxt, 2) + Math.pow(dyt, 2));
             distLeft += magt;
         }
 
-        if(distLeft < slowDownDistance){
-            double slope = (baseSpeed - slowSpeed)/slowDownDistance;
+        if (distLeft < slowDownDistance) {
+            double slope = (baseSpeed - slowSpeed) / slowDownDistance;
             adjSpeed = slowSpeed + distLeft * slope;
         }
 
         double velY = adjSpeed * udx;
         double velX = adjSpeed * udy;
 
-        //OMEGA CALCS
-        //Add Step down function to manage omega make sure to include options for camera tracking
+        // OMEGA CALCS
+        // Add Step down function to manage omega make sure to include options for
+        // camera tracking
         double currTheta = Math.toRadians(drive.getFieldAngle());
         SmartDashboard.putNumber("curr Theta", currTheta);
 
-        double currPosTheta =Math.toRadians(listOfCoords.get(currTarIndex).getTheta());
+        double currPosTheta = Math.toRadians(listOfCoords.get(currTarIndex).getTheta());
         double currPosPosTheta = Math.toRadians(listOfCoords.get(currTarIndex).getTheta() - 360);
         double currPosNegTheta = Math.toRadians(listOfCoords.get(currTarIndex).getTheta() + 360);
-        if(!Drive.isBlueAlliance()){
+        if (!Drive.isBlueAlliance()) {
             currPosTheta += Math.toRadians(180);
             currPosPosTheta += Math.toRadians(180);
             currPosNegTheta += Math.toRadians(180);
@@ -178,14 +182,13 @@ public class toArrayMaker  extends CommandBase {
         double dThetaNegErr = currPosNegTheta - currTheta;
         double dThetaPosErr = currPosPosTheta - currTheta;
         double tarTheta = 0;
-        if(Math.abs(dThetaRegErr) > Math.abs(dThetaPosErr) && Math.abs(dThetaNegErr) > Math.abs(dThetaPosErr)){
+        if (Math.abs(dThetaRegErr) > Math.abs(dThetaPosErr) && Math.abs(dThetaNegErr) > Math.abs(dThetaPosErr)) {
             tarTheta = currPosPosTheta;
-        }else if(Math.abs(dThetaRegErr) > Math.abs(dThetaNegErr) && Math.abs(dThetaPosErr) > Math.abs(dThetaNegErr)){
+        } else if (Math.abs(dThetaRegErr) > Math.abs(dThetaNegErr) && Math.abs(dThetaPosErr) > Math.abs(dThetaNegErr)) {
             tarTheta = currPosNegTheta;
-        }else{
+        } else {
             tarTheta = currPosTheta;
         }
-        
 
         SmartDashboard.putNumber("currPos", tarTheta);
 
@@ -193,47 +196,51 @@ public class toArrayMaker  extends CommandBase {
 
         double omega = 0;
 
-        //NOTE tarTheta IS IN DEGREES BUT OUTPUT WILL BE IN RAD/SEC
-        //This part sets the omega based on how far we are from the desired theta
-        if(Math.abs(dTheta) < Constants.thresholdT1){
+        // NOTE tarTheta IS IN DEGREES BUT OUTPUT WILL BE IN RAD/SEC
+        // This part sets the omega based on how far we are from the desired theta
+        if (Math.abs(dTheta) < Constants.thresholdT1) {
             omega = Constants.tVel1;
-        }else if(Math.abs(dTheta) <Constants.thresholdT2){
+        } else if (Math.abs(dTheta) < Constants.thresholdT2) {
             omega = Constants.tVel2;
-        }else if(Math.abs(dTheta) < Constants.thresholdT3){
+        } else if (Math.abs(dTheta) < Constants.thresholdT3) {
             omega = Constants.tVel3;
-        }else{
+        } else {
             omega = Constants.tVelOutside;
         }
 
-        //THE SIGNS MIGHT NEED TO BE FLIPPED
-        //THIS PART OF THE CODE ADJUSTS THE DIRECTION OF THE OMEGA SO THAT IT GOES THE CORRECT DIRECTION BASED ON WHETHER OUR ERROR IS POSITIVE OR NEGATIVE
-         if(dTheta < 0){
-             omega = -1 * omega;
-          }
-        
-            drive.velX = velX;
-            drive.velY = velY;
-            drive.omega = omega;
+        // THE SIGNS MIGHT NEED TO BE FLIPPED
+        // THIS PART OF THE CODE ADJUSTS THE DIRECTION OF THE OMEGA SO THAT IT GOES THE
+        // CORRECT DIRECTION BASED ON WHETHER OUR ERROR IS POSITIVE OR NEGATIVE
+        if (dTheta < 0) {
+            omega = -1 * omega;
+        }
 
-            //INDEXING STUF
-            if(mag < listOfCoords.get(currTarIndex).getTolerance()){
+        drive.velX = velX;
+        drive.velY = velY;
+        drive.omega = omega;
+        SmartDashboard.putBoolean("Tar april", listOfCoords.get(currTarIndex).isSeeApril());
+        // INDEXING STUF
+        if (listOfCoords.get(currTarIndex).isSeeApril()) {
+            if (mag < listOfCoords.get(currTarIndex).getTolerance() && lime.isSeeApril()) {
                 currTarIndex++;
             }
-            if(currTarIndex == listOfCoords.size()){
-                isFinish = true;
+        } else {
+            if (mag < listOfCoords.get(currTarIndex).getTolerance()) {
+                currTarIndex++;
             }
-        
-    }
-    
-    @Override
-    public void end(boolean interrupte) {      
-        System.out.println("finished com");
-        drive.omega = 0;
-        drive.velX = 0;
-        drive.velY = 0;
+        }
+        if (currTarIndex == listOfCoords.size()) {
+            isFinish = true;
+        }
+
     }
 
-    public static int getCurrIndexInner(){
+    @Override
+    public void end(boolean interrupte) {
+        System.out.println("finished com");
+    }
+
+    public static int getCurrIndexInner() {
         return currIndexInner;
     }
 }

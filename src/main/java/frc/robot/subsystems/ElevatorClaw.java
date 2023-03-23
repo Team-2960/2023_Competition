@@ -148,7 +148,7 @@ public class ElevatorClaw {
     }
 
     public double feedForwardElevator(double tarVelocity) {
-        return tarVelocity * 0.0000573171 + 0.06;
+        return tarVelocity * 0.0000573171 + 0.05;
     }
 
     public void setElevatorState(ElevatorState position) {
