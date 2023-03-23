@@ -35,10 +35,10 @@ public class alignAndDriveApril extends CommandBase {
     double baseSpeed = 0;
     double slowSpeed = 0;
     double adjSpeed = 0;
-    double slowDownDistance = 0.5;
+    double slowDownDistance = 0.75;
     double tolerance = 0;
     double dx;
-    double target = 11;
+    double target = 14;
     double timeOut;
 
     public alignAndDriveApril(double xCoord, double baseSpeed, double slowSpeed, double tolerance, double timeOut) {
@@ -81,7 +81,7 @@ public class alignAndDriveApril extends CommandBase {
      */
     @Override
     public boolean isFinished() {
-        return (((visionTimer.get() > 0.2 && Math.toDegrees(Math.abs(angleError)) < 7) && Math.abs(dx) < tolerance)) || endTimer.get() > .5; //|| DriverStation.getMatchTime() < timeOut;
+        return (((visionTimer.get() > 0.2 && Math.toDegrees(Math.abs(angleError)) < 7) && Math.abs(dx) < tolerance));// || endTimer.get() > .5; //|| DriverStation.getMatchTime() < timeOut;
     }
 
     @Override
@@ -129,11 +129,11 @@ public class alignAndDriveApril extends CommandBase {
                 drive.velX = dir * error / 16;
                 drive.omega = 0;
             }else{
-                drive.velX = 0;
                 drive.velY = 0;
+                drive.velX = 0;
             }
         }else{
-        
+        drive.velY = velX/2;
         double currTheta = Math.toRadians(Drive.getFieldAngle());
 
         SmartDashboard.putNumber("curr Theta", currTheta);

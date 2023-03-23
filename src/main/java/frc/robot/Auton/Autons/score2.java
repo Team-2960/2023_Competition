@@ -2,6 +2,7 @@ package frc.robot.Auton.Autons;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Auton.*;
@@ -23,9 +24,13 @@ public class score2 extends SequentialCommandGroup{
     public score2(String url) throws IOException{
         addCommands(
             new grabGamePiece(),
-            new armPos(ElevatorState.LEVEL3),
-            new setVisionPipeline(1),
-            new alignAndDriveVisionRight(-6.45, 1, 0.3,0.1, 0,6),
+            new ParallelCommandGroup(
+                new SequentialCommandGroup(
+                    new armPos(ElevatorState.LEVEL3),
+                    new setVisionPipeline(1)),
+                new SequentialCommandGroup(
+                    new wait(0.5),
+                    new alignAndDriveVisionRight(-6.45, 1, 0.3,0.1, 0,6))),
             new releaseGamePiece(),
             new wait(0.2),
             new setVisionPipeline(0),
@@ -39,9 +44,10 @@ public class score2 extends SequentialCommandGroup{
                     ),
                 new SequentialCommandGroup(
                     new toArrayMaker(2.05,0.75,1.5,0.5,0.3,20, Filesystem.getDeployDirectory() + "/score2.json"),
-                    new driveUntilApril(-2, 0))),
-            new setVisionPipeline(2),
-            new alignAndDriveApril(-6.4, 1, 0.2,0.1, 0),//needs to be 10000
+                    new driveUntilApril(-2, 0.4))),
+            new ParallelRaceGroup(
+                new alignAndDriveApril(-6.25, 1.5, 0.75,0.2, 0),//needs to be 10000
+                new wait(2.5)),
             new releaseGamePiece()
         );
     }

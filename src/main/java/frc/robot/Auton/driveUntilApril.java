@@ -27,12 +27,13 @@ public class driveUntilApril extends CommandBase {
         drive = Drive.get_Instance();
         timer = new Timer();
         lime = Lime.get_Instance();
-        System.out.println("xWheels");
     }
 
     @Override
     public void initialize() {
         timer.start();
+        System.out.println("drive april");
+
     }
 
     /**
@@ -114,5 +115,7 @@ public class driveUntilApril extends CommandBase {
      */
     @Override
     public void end(boolean interrupte) {
+        drive.velX = 0;
+        drive.velY = 0;
     }
 }

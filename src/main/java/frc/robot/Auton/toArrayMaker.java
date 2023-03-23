@@ -237,10 +237,14 @@ public class toArrayMaker extends CommandBase {
 
     @Override
     public void end(boolean interrupte) {
+        drive.velX = 0;
+        drive.velY = 0;
+        drive.omega = 0;
         System.out.println("finished com");
     }
 
     public static int getCurrIndexInner() {
         return currIndexInner;
     }
+    
 }
