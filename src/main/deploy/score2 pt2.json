@@ -1,45 +1,13 @@
 [
     {
-        "size": 4
+        "size": 1
     },
     {
-        "x": -6.188,
-        "y": 1.172,
+        "x": -6.388,
+        "y": 0.57,
         "theta": 0,
         "tolerance": 0.2,
         "isSeeApril": false
-
-    },
-    {
-        "x": -3.99,
-        "y": 1.2,
-        "theta": 0,
-        "tolerance": 0.2,
-        "isSeeApril": false
-
-    },
-    {
-        "x": -1.977,
-        "y": 1,
-        "theta": 0,
-        "tolerance": 0.2,
-        "isSeeApril": false
-
-    },
-    {
-        "x": -3.99,
-        "y": 1.4,
-        "theta": 0,
-        "tolerance": 0.2,
-        "isSeeApril": false
-
-    },
-    {
-        "x": -5.687,
-        "y": 0.694,
-        "theta": 0,
-        "tolerance": 0.3,
-        "isSeeApril": true
 
     }
 

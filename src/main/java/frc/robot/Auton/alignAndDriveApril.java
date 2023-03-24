@@ -126,7 +126,7 @@ public class alignAndDriveApril extends CommandBase {
                 double dir = 1;
                 if (sigError > 0)
                     dir = -1;
-                drive.velX = dir * error / 16;
+                drive.velX = dir * error / 18;
                 drive.omega = 0;
             }else{
                 drive.velY = 0;
