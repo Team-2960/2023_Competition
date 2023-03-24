@@ -37,6 +37,7 @@ public class alignAndDriveVision extends CommandBase {
     double dx;
     double tarAngle;
     double limeTol;
+    double target = 12;
 
     public alignAndDriveVision(double xCoord, double baseSpeed, double slowSpeed, double tolerance, double tarAngle) {
         drive = Drive.get_Instance();
@@ -44,7 +45,12 @@ public class alignAndDriveVision extends CommandBase {
         timer = new Timer();
         visionTimer = new Timer();
         delayTimer = new Timer();
+
         this.xCoord = xCoord;
+        if (!Drive.isBlueAlliance()) {
+            this.xCoord *= -1;
+            // target *= -1;
+        }
         this.baseSpeed = baseSpeed;
         this.slowSpeed = slowSpeed;
         this.tolerance = tolerance;
@@ -52,7 +58,8 @@ public class alignAndDriveVision extends CommandBase {
         System.out.println("Align Grab");
     }
 
-    public alignAndDriveVision(double xCoord, double baseSpeed, double slowSpeed, double tolerance, double tarAngle, double limeTol) {
+    public alignAndDriveVision(double xCoord, double baseSpeed, double slowSpeed, double tolerance, double tarAngle,
+            double limeTol) {
         drive = Drive.get_Instance();
         lime = Lime.get_Instance();
         timer = new Timer();
@@ -116,7 +123,7 @@ public class alignAndDriveVision extends CommandBase {
 
             double velX = adjSpeed * udx;
             drive.velY = velX;
-            double sigError = 12 - lime.getHorOffset();
+            double sigError = target - lime.getHorOffset();
             if (Math.abs(sigError) < limeTol) {
                 visionTimer.start();
             } else {
@@ -124,22 +131,32 @@ public class alignAndDriveVision extends CommandBase {
             }
             if (Math.abs(tarAngle - drive.getRobotPos().getRotation().getDegrees()) < 5) {
                 if (timer.get() > 0.2) {
-                    error = Math.abs(12 - lime.getHorOffset());
-                    //error = Math.max(10, Math.min(1, error));
+                    error = Math.abs(target - lime.getHorOffset());
+                    // error = Math.max(10, Math.min(1, error));
                     double dir = 1;
                     if (sigError > 0)
                         dir = -1;
-                    drive.velX = dir * (error / 15 + 1/15);
+                    if (!Drive.isBlueAlliance()) {
+                        dir *= -1;
+                    }
+                    drive.velX = dir * (error / 15 + 1 / 15);
                     drive.omega = 0;
                 }
             } else {
 
-                double currTheta = Math.toRadians(drive.getFieldAngle());
+                double currTheta = Math.toRadians(Drive.getFieldAngle());
+
                 SmartDashboard.putNumber("curr Theta", currTheta);
 
-                double currPosTheta = Math.toRadians(tarAngle);
-                double currPosPosTheta = Math.toRadians(tarAngle -360);
-                double currPosNegTheta = Math.toRadians(tarAngle + 360);
+                double currPosTheta = Math.toRadians(0);
+                double currPosPosTheta = Math.toRadians(-360);
+                double currPosNegTheta = Math.toRadians(360);
+
+                if (!Drive.isBlueAlliance()) {
+                    currPosTheta = Math.toRadians(180);
+                    currPosPosTheta = Math.toRadians(-180);
+                    currPosNegTheta = Math.toRadians(540);
+                }
 
                 double dThetaRegErr = currPosTheta - currTheta;
                 double dThetaNegErr = currPosNegTheta - currTheta;
@@ -188,7 +205,7 @@ public class alignAndDriveVision extends CommandBase {
     @Override
     public void end(boolean interrupte) {
         System.out.println("Finished Command");
-        //lime.setPipeline(0);
+        // lime.setPipeline(0);
         drive.velY = 0;
         drive.velX = 0;
         timer.stop();

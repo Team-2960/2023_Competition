@@ -10,7 +10,7 @@ import frc.robot.*;
 
 
 
-public class driveUntilApril extends CommandBase {
+public class driveInDir extends CommandBase {
 
     boolean isFinished;
 
@@ -21,7 +21,7 @@ public class driveUntilApril extends CommandBase {
     double velX;
 
     Timer timer;
-    public driveUntilApril(double velX, double velY) {
+    public driveInDir(double velX, double velY) {
         this.velX = velX;
         this.velY = velY;
         if(!Drive.isBlueAlliance()){
@@ -35,6 +35,11 @@ public class driveUntilApril extends CommandBase {
 
     @Override
     public void initialize() {
+        if (!Drive.isBlueAlliance()) {
+            lime.setPipeline(1);
+        } else {
+            lime.setPipeline(3);
+        }
         timer.start();
         System.out.println("drive april");
 
@@ -53,7 +58,7 @@ public class driveUntilApril extends CommandBase {
      */
     @Override
     public boolean isFinished() {
-        return lime.isSeeApril();
+        return false;
     }
 
     @Override

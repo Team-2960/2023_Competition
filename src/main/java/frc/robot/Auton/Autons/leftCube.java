@@ -23,8 +23,10 @@ public class leftCube extends SequentialCommandGroup{
     public leftCube(String url) throws IOException{
         addCommands(
             new grabGamePiece(),
+            new ParallelCommandGroup(
+                    new flapperDoorDown(),
+                    new wristUp()),
             new armPos(ElevatorState.LEVEL3),
-            new alignAndDriveApril(-6.25, 1, 0.3,0.2, 7),
             new releaseGamePiece(),
             new ParallelCommandGroup(
                 new SequentialCommandGroup(

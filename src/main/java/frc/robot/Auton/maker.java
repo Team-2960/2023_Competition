@@ -2,6 +2,7 @@ package frc.robot.Auton;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Auton.*;
@@ -18,11 +19,14 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Filesystem;
 
-
-public class maker extends SequentialCommandGroup{
+public class maker extends SequentialCommandGroup {
     public maker(String url) throws IOException{
         addCommands(
-            new setVisionPipeline(0),
+            new ParallelRaceGroup(
+                new pastXPosition(6.2, true),
+                new driveInDir(-1, 0)),
+            new alignAndDriveVisionRight(-6.55, 1, 0.3, 0.1, 0, 4)
+            /*new setVisionPipeline(0),
             new grabGamePiece(),
             new armPos(ElevatorState.LEVEL1),
             new releaseGamePiece(),
@@ -48,7 +52,7 @@ public class maker extends SequentialCommandGroup{
                     new setVisionPipeline(2),
                     new armPos(ElevatorState.LEVEL1)),
                 new toArrayMaker(1.5,0.75,1,0.5,0.3,20, Filesystem.getDeployDirectory() + "/3GamePiece pt2.json")),
-            new releaseGamePiece()                    
+            new releaseGamePiece()   */                 
         );
     }
 }

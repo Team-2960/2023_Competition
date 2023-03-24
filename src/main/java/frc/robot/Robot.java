@@ -24,6 +24,7 @@ import frc.robot.Auton.maker;
 import frc.robot.Auton.Autons.balance;
 import frc.robot.Auton.Autons.coneAndBalance;
 import frc.robot.Auton.Autons.cubeAndBalance;
+import frc.robot.Auton.Autons.leftCube;
 import frc.robot.Auton.Autons.rightCube;
 import frc.robot.Auton.Autons.score2;
 import frc.robot.subsystems.*;
@@ -73,7 +74,7 @@ public class Robot extends TimedRobot {
     // ph.disable();
     drive.coastMode();
     try {
-      autonCommand = new score2("lol this does nothing");
+      autonCommand = new rightCube("lol this does nothing");
     } catch (IOException e) {
       e.printStackTrace();
     }

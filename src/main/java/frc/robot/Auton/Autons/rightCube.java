@@ -18,21 +18,21 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Filesystem;
 
-
-public class rightCube extends SequentialCommandGroup{
-    public rightCube(String url) throws IOException{
+public class rightCube extends SequentialCommandGroup {
+    public rightCube(String url) throws IOException {
         addCommands(
-            new grabGamePiece(),
-            new armPos(ElevatorState.LEVEL3),
-            new alignAndDriveApril(-6.25, 1, 0.3,0.2, 7),
-            new wait(1),
-            new releaseGamePiece(),
-            new wait(1),
-            new ParallelCommandGroup(
-                new SequentialCommandGroup(
-                    new pastXPosition(5.5, false),
-                    new armPos(ElevatorState.HOME)),
-                    new toArrayMaker(1.75,0.75,0.5,0.5,0.3,20, Filesystem.getDeployDirectory() + "/outsideZoneRight.json"))
-        );
+                new grabGamePiece(),
+                new ParallelCommandGroup(
+                        new flapperDoorDown(),
+                        new wristUp()),
+                new armPos(ElevatorState.LEVEL3),
+                new releaseGamePiece(),
+                new wait(1),
+                new ParallelCommandGroup(
+                        new SequentialCommandGroup(
+                                new pastXPosition(-5.5, false),
+                                new armPos(ElevatorState.HOME)),
+                        new toArrayMaker(1.75, 0.75, 0.5, 0.5, 0.3, 20,
+                                Filesystem.getDeployDirectory() + "/outsideZoneRight.json")));
     }
 }
