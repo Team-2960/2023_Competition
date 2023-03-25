@@ -38,7 +38,7 @@ public class alignAndDriveVisionRight extends CommandBase {
     double dx;
     double tarAngle;
     double limeTol;
-    double target = 12;
+    double target = 10;
 
     public alignAndDriveVisionRight(double xCoord, double baseSpeed, double slowSpeed, double tolerance,
             double tarAngle, double limeTol) {
@@ -161,6 +161,7 @@ public class alignAndDriveVisionRight extends CommandBase {
                     double dir = 1;
                     if (sigError > 0)
                         dir = -1;
+                    //I think this is the problem
                     if (!Drive.isBlueAlliance()) {
                         dir *= -1;
                     }

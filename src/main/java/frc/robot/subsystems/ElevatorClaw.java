@@ -7,6 +7,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Timer;
@@ -39,6 +40,8 @@ public class ElevatorClaw {
     private boolean enableGripperAuto = true;
     private boolean enableStopperAuto = true;
     private boolean enableWristAuto = true;
+
+    double stopperDelay = 0.75;
 
     public enum ElevatorState {
         HOME,
@@ -104,9 +107,9 @@ public class ElevatorClaw {
      * @param val the state of gripper solenoids
      */
     public void setWristState(Value val) {
-        if (mRElevator.getSelectedSensorPosition() < Constants.moveWristLimit) {
+        //if (mRElevator.getSelectedSensorPosition() < Constants.moveWristLimit) {
             sWrist.set(val);
-        }
+        
 
     }
 
@@ -347,12 +350,15 @@ public class ElevatorClaw {
     public void enableElevatorPID(boolean enable) {
         enableElevatorPID = enable;
     }
+    public void setStopperDelay( double delay){
+        stopperDelay = delay;
+    }
     public void periodic(){ 
         if (enableStopperAuto) {
             checkStopperPosition();
         }
         gripperTimer.start();
-        if (gripperTimer.get() > 0.75){
+        if (gripperTimer.get() > stopperDelay){
             if(enableElevatorPID){
                 setElevatorPosition(elevatorTarget);
             }
