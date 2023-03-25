@@ -4,7 +4,7 @@
     },
     {
         "x": -3.99,
-        "y": 1,
+        "y": 0.4,
         "theta": 0,
         "tolerance": 0.2,
         "isSeeApril": false
@@ -12,7 +12,7 @@
     },
     {
         "x": -2.377,
-        "y": 0.9,
+        "y": 0.3,
         "theta": 0,
         "tolerance": 0.2,
         "isSeeApril": false
@@ -20,7 +20,7 @@
     },
     {
         "x": -3.99,
-        "y": 1.2,
+        "y": 0.6,
         "theta": 0,
         "tolerance": 0.2,
         "isSeeApril": false
@@ -28,7 +28,7 @@
     },
     {
         "x": -5.687,
-        "y": 1.1,
+        "y": 0.5,
         "theta": 0,
         "tolerance": 0.5,
         "isSeeApril": false

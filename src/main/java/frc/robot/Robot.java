@@ -74,7 +74,7 @@ public class Robot extends TimedRobot {
     // ph.disable();
     drive.coastMode();
     try {
-      autonCommand = new rightCube("lol this does nothing");
+      autonCommand = new maker("lol this does nothing");
     } catch (IOException e) {
       e.printStackTrace();
     }
@@ -90,6 +90,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void autonomousInit() {
+    elevatorClaw.setStopperDelay(0.75);
     drive.breakMode();
     elevatorClaw.setElevatorCoastMode();
     if (autonCommand != null)
@@ -103,6 +104,7 @@ public class Robot extends TimedRobot {
 
   @Override
   public void teleopInit() {
+    elevatorClaw.setStopperDelay(0.75);
     lime.setPipeline(0);
     elevatorClaw.setElevatorCoastMode();
   }

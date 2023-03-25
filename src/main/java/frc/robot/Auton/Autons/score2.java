@@ -30,9 +30,9 @@ public class score2 extends SequentialCommandGroup {
                         new SequentialCommandGroup(
                                 new wait(1.5),
                                 new ParallelRaceGroup(
-                                        new pastXPosition(5.9, true),
+                                        new pastXPosition(6.3, true),
                                         new driveInDir(-1, 0)),
-                                new alignAndDriveVisionRight(-6.25, 1, 0.3, 0.1, 0, 6))),
+                                new alignAndDriveVisionRight(-6.55, 1, 0.3, 0.1, 0, 6))),
                 new releaseGamePiece(),
                 new wait(0.2),
                 new setVisionPipeline(0),
