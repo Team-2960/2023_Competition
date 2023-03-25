@@ -57,6 +57,7 @@ public class swerveOdometry {
 
     public swerveOdometry(SwerveDriveKinematics m_kinematics, Rotation2d gyroAngle, SwerveModulePosition[] modPos) {
         // LOGGING
+        /*
         DataLog log = DataLogManager.getLog();
         xLog = new DoubleLogEntry(log, "/output/x");
         yLog = new DoubleLogEntry(log, "/output/y");
@@ -75,6 +76,7 @@ public class swerveOdometry {
         FLD = new DoubleLogEntry(log, "/input/FLD");
         FRA = new DoubleLogEntry(log, "/input/FRA");
         FRD = new DoubleLogEntry(log, "/input/FRD");
+        */
         x = 0;
         y = 0;
         theta = 0;
@@ -178,7 +180,7 @@ public class swerveOdometry {
         x += dx * timeStep;
         y += dy * timeStep;
         theta = gyroHeadingRad;
-        
+        /*
         xLog.append(x);
         yLog.append(y);
         tLog.append(theta);
@@ -196,6 +198,7 @@ public class swerveOdometry {
         FLD.append(fl.speedMetersPerSecond);
         FRA.append(fr.angle.getDegrees());
         FRD.append(fr.speedMetersPerSecond);
+        */
         
 
         SmartDashboard.putBoolean("is see april", lime.isSeeApril());

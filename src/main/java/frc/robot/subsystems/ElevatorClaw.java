@@ -7,8 +7,8 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,7 +27,7 @@ public class ElevatorClaw {
     private DoubleSolenoid sStopper;
     // Photoeyes
     private DigitalInput lowerPhotoEye;
-    private DigitalInput upperPhotoEye;
+    //private DigitalInput upperPhotoEye;
 
     private boolean enableElevatorPID = false;
     private double target = 0;
@@ -40,6 +40,8 @@ public class ElevatorClaw {
     private boolean enableGripperAuto = true;
     private boolean enableStopperAuto = true;
     private boolean enableWristAuto = true;
+
+    private DutyCycleEncoder wristEncoder;
 
     double stopperDelay = 0.75;
 
@@ -66,9 +68,10 @@ public class ElevatorClaw {
         elvSpeedP, Constants.elvSpeedI, Constants.elvSpeedD);
         sGripper = new DoubleSolenoid(18, PneumaticsModuleType.REVPH, Constants.sGripperID[0], Constants.sGripperID[1]);
         sWrist = new DoubleSolenoid(18, PneumaticsModuleType.REVPH, Constants.sWristID[0], Constants.sWristID[1]);
+        wristEncoder = new DutyCycleEncoder(Constants.wristEncoder0);
         sStopper = new DoubleSolenoid(18, PneumaticsModuleType.REVPH, Constants.sStopperID[0], Constants.sStopperID[1]);
         lowerPhotoEye = new DigitalInput(Constants.LowerElevatorPhotoeye);
-        upperPhotoEye = new DigitalInput(Constants.UpperElevatorPhotoeye);
+        //upperPhotoEye = new DigitalInput(Constants.UpperElevatorPhotoeye);
         currentState = ElevatorState.HOME;
         targetState = ElevatorState.HOME;
         mRElevator.setSelectedSensorPosition(0);
@@ -292,6 +295,18 @@ public class ElevatorClaw {
         }
     }
 
+    public void setWristPosition(double pos){
+        double currentPos = wristEncoder.getDistance();
+        double tolerance = 150;
+        if(currentPos > pos + tolerance && currentPos < pos - tolerance){
+            setWristState(Value.kOff);
+        }else if(currentPos < pos){
+            setWristState(Value.kForward);
+        }else if(currentPos > pos){
+            setWristState(Value.kReverse);
+        }
+    }
+
     public void autoSetWristPos() {
         if (targetState == ElevatorState.HOME) {
             setWristState(Value.kReverse);
@@ -343,9 +358,9 @@ public class ElevatorClaw {
         return lowerPhotoEye.get();
     }
 
-    public boolean getUpperPhotoEye() {
+    /*public boolean getUpperPhotoEye() {
         return upperPhotoEye.get();
-    }
+    }*/
 
     public void enableElevatorPID(boolean enable) {
         enableElevatorPID = enable;
@@ -378,6 +393,7 @@ public class ElevatorClaw {
         SmartDashboard.putNumber("elevatorEncoder", mRElevator.getSelectedSensorVelocity());
         SmartDashboard.putNumber("elevatorPosition", mRElevator.getSelectedSensorPosition());
         SmartDashboard.putBoolean("atTargetPosition", isElevatorAtPosition());
+        SmartDashboard.putNumber("wristPosition", wristEncoder.getDistance());
         if (enableElevatorPID) {
             // calcPID(target);
         }

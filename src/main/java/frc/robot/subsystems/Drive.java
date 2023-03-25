@@ -334,8 +334,8 @@ public class Drive {
         frontRightSwerveSpeed = 0;
         backLeftSwerveSpeed = 0;
         backRightSwerveSpeed = 0;
-        frontLeftSwerveAngle = 45;
-        frontRightSwerveAngle = 135;
+        frontLeftSwerveAngle = 45+90;
+        frontRightSwerveAngle = 135+90;
         backLeftSwerveAngle = 225;
         backRightSwerveAngle = 315;
     }
@@ -343,6 +343,9 @@ public class Drive {
     // Called instead of the periodic function
     public void periodicTele() {
         sanitizeAngle();
+        if(isXWheels){
+            setWheelsXTele();
+        }
         frontLeft.setSpeed(frontLeftSwerveSpeed / 75, frontLeft.anglePIDCalcABS(frontLeftSwerveAngle));
         frontRight.setSpeed(frontRightSwerveSpeed / 75, frontRight.anglePIDCalcABS(frontRightSwerveAngle));
         backLeft.setSpeed(backLeftSwerveSpeed / 75, backLeft.anglePIDCalcABS(backLeftSwerveAngle));

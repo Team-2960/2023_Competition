@@ -39,7 +39,8 @@ public class Constants {
     public static double tVelOutside = 2.1;
 
     //PhotoEyes
-    public final static int gamePiecePhotoeye = 0;
+    public final static int gamePiecePhotoeye = 3;
+    public final static int wristEncoder0 = 0;
     public final static int LowerElevatorPhotoeye = 1;
     public final static int UpperElevatorPhotoeye = 2;
 
@@ -68,7 +69,8 @@ public class Constants {
     public final static int[] sGripperID = {4,5}; 
     public final static int[] sIntakeID = {2,3};
     public final static int[] sWristID = {7,6};
-    public final static int[] sStopperID = {0,1};
+    public final static int[] sStopperID = {15,14};
+
 
     //MISC CAN
     public final static int PneumHub = 18;
