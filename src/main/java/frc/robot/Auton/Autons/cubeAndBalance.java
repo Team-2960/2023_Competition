@@ -25,13 +25,15 @@ public class cubeAndBalance extends SequentialCommandGroup {
 
                 new ParallelRaceGroup(
                         new SequentialCommandGroup(
-                                new grabGamePiece(),
-                                new ParallelCommandGroup(
-                                        new flapperDoorDown(),
-                                        new wristUp()),
-                                new armPos(ElevatorState.LEVEL3),
+                                new ParallelRaceGroup(
+                                        new SequentialCommandGroup(
+                                                new grabGamePiece(),
+                                                new ParallelCommandGroup(
+                                                        new flapperDoorDown(),
+                                                        new wristUp()),
+                                                new armPos(ElevatorState.LEVEL3)),
+                                        new wait(3.5)),
                                 new releaseGamePiece(),
-
                                 new ParallelCommandGroup(
                                         new SequentialCommandGroup(
                                                 new pastXPosition(5.5, false),
