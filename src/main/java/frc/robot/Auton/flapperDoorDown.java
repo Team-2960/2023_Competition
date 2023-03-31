@@ -27,6 +27,8 @@ public class flapperDoorDown extends CommandBase {
 
     @Override
     public void initialize() {
+        elevatorClaw.disableStopperAuto(true);
+        elevatorClaw.setStopperState(Value.kReverse);
     }
 
     /**
@@ -47,7 +49,7 @@ public class flapperDoorDown extends CommandBase {
 
     @Override
     public void execute() {
-        elevatorClaw.setStopperState(Value.kForward);
+        elevatorClaw.setStopperState(Value.kReverse);
         isFinished = true;
     }
 

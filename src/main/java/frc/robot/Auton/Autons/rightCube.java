@@ -33,6 +33,6 @@ public class rightCube extends SequentialCommandGroup {
                                 new pastXPosition(-5.5, false),
                                 new armPos(ElevatorState.HOME)),
                         new toArrayMaker(1.75, 0.75, 0.5, 0.5, 0.3, 20,
-                                Filesystem.getDeployDirectory() + "/outsideZoneRight.json")));
+                                Filesystem.getDeployDirectory() + "/newScore1Right.json")));
     }
 }

@@ -17,9 +17,7 @@ public class Constants {
     public final static double wheelDiameter = Math.PI*3.9 * metersPerInch;
     public final static double gearReduction = 8.14;
 
-    
-
-
+    public final static double upWristPos = 0.33;
 
     public final static double velocityToMeters = (10*(1/gearReduction)*wheelDiameter)/(ticksPerRev);
     public final static double positionToMeters = (1/gearReduction*wheelDiameter)/(ticksPerRev);

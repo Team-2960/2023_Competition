@@ -28,11 +28,12 @@ public class leftCube extends SequentialCommandGroup{
                     new wristUp()),
             new armPos(ElevatorState.LEVEL3),
             new releaseGamePiece(),
+            new wait(1),
             new ParallelCommandGroup(
                 new SequentialCommandGroup(
                     new pastXPosition(5.5, false),
                     new armPos(ElevatorState.HOME)),
-                    new toArrayMaker(1.75,0.75,0.5,0.5,0.3,20, Filesystem.getDeployDirectory() + "/outsideZoneLeft.json"))
+                    new toArrayMaker(1.75,0.75,0.5,0.5,0.3,20, Filesystem.getDeployDirectory() + "/newScore1Left.json"))
         );
     }
 }

@@ -27,6 +27,7 @@ public class wristUp extends CommandBase {
 
     @Override
     public void initialize() {
+        elevatorClaw.disableWristAuto(true);
         timer.start();
     }
 
@@ -43,7 +44,7 @@ public class wristUp extends CommandBase {
      */
     @Override
     public boolean isFinished() {
-        return timer.get() > 0.75;
+        return elevatorClaw.getWristLoc() > Constants.upWristPos;
     }
 
     @Override
@@ -56,6 +57,7 @@ public class wristUp extends CommandBase {
      */
     @Override
     public void end(boolean interrupte) {
+        elevatorClaw.disableWristAuto(false);
         Drive.isXWheels = false;
     }
 }

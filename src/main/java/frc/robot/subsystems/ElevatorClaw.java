@@ -85,7 +85,7 @@ public class ElevatorClaw {
     public void elevatorStartPosition() {
         setWristState(Value.kForward);
         setStopperState(Value.kReverse);
-        setGripperState(Value.kForward);
+        setGripperState(Value.kReverse);
     }
 
     public static ElevatorClaw get_Instance() {
@@ -103,7 +103,6 @@ public class ElevatorClaw {
     public void setGripperState(Value val) {
         sGripper.set(val);
     }
-
     /**
      * Open Gripper
      * 
@@ -191,8 +190,8 @@ public class ElevatorClaw {
     }
     public void setElevatorPosition(double position){
         double maxSpeed = 6000;//8500;
-        double minSpeed = 750;
-        double constantRD = 0.4;
+        double minSpeed = 1000;
+        double constantRD = 0.5;
         double rate;
         double currentPos = (mRElevator.getSelectedSensorPosition());
         double diff = currentPos - position;
@@ -293,6 +292,10 @@ public class ElevatorClaw {
                 changeGripperState = false;
             } 
         }
+    }
+
+    public double getWristLoc(){
+        return wristEncoder.getDistance();
     }
 
     public void setWristPosition(double pos){

@@ -1,0 +1,19 @@
+[
+    {
+        "size": 2
+    },
+    {
+        "x": 4.55,
+        "y": -0.15,
+        "theta": 0,
+        "tolerance": 0.2,
+        "isSeeApril": false
+    },
+    {
+        "x": 2.03,
+        "y": 0,
+        "theta": 0,
+        "tolerance": 0.2,
+        "isSeeApril": false
+    }
+]

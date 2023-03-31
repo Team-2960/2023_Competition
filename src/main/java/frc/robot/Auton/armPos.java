@@ -30,6 +30,8 @@ public class armPos extends CommandBase {
     @Override
     public void initialize() {
         elevatorClaw.setElevatorState(position);
+        elevatorClaw.setStopperDelay(0);
+        elevatorClaw.disableStopperAuto(false);
     }
 
     /**
@@ -58,6 +60,6 @@ public class armPos extends CommandBase {
      */
     @Override
     public void end(boolean interrupte) {
-
+        elevatorClaw.setStopperDelay(0.75);
     }
 }

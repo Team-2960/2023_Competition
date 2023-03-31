@@ -14,6 +14,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.datalog.DataLog;
 import edu.wpi.first.util.datalog.DoubleLogEntry;
 import edu.wpi.first.wpilibj.DataLogManager;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -48,6 +49,7 @@ public class swerveOdometry {
     DoubleLogEntry FLD;
     DoubleLogEntry FRA;
     DoubleLogEntry FRD;
+    double matchTime;
 
     private Drive drive;
 
@@ -200,10 +202,12 @@ public class swerveOdometry {
         FRD.append(fr.speedMetersPerSecond);
         */
         
-
+        SmartDashboard.putNumber("last seen april", matchTime);
         SmartDashboard.putBoolean("is see april", lime.isSeeApril());
+        /*
         if (lime.isSeeApril() && lime.getPipeline() != 1) {
             try {
+                matchTime = DriverStation.getMatchTime();
                 x = lime.getX();
                 y = lime.getY();
             } catch (Exception e) {
@@ -218,8 +222,8 @@ public class swerveOdometry {
              * theta = theta + 2* Math.PI;
              * }
              * Drive.setNavX(Math.toDegrees(theta) - drive.navX.getAngle());
-             */
-        }
+             
+        }*/
     }
 
     public Pose2d getRobotPose() {

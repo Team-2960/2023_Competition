@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.Filesystem;
 public class maker extends SequentialCommandGroup {
     public maker(String url) throws IOException{
         addCommands(
-                new driveInDir(-1, 0)
+            new flapperDoorDown()
             /*new setVisionPipeline(0),
             new grabGamePiece(),
             new armPos(ElevatorState.LEVEL1),
