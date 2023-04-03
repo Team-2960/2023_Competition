@@ -43,7 +43,7 @@ public class ElevatorClaw {
 
     private DutyCycleEncoder wristEncoder;
 
-    double stopperDelay = 0.75;
+    double stopperDelay = 0.25;
 
     public enum ElevatorState {
         HOME,
@@ -191,7 +191,7 @@ public class ElevatorClaw {
     public void setElevatorPosition(double position){
         double maxSpeed = 6000;//8500;
         double minSpeed = 1000;
-        double constantRD = 0.5;
+        double constantRD = 1;
         double rate;
         double currentPos = (mRElevator.getSelectedSensorPosition());
         double diff = currentPos - position;
@@ -204,7 +204,8 @@ public class ElevatorClaw {
             setElevator(0);
 
             if (currentState == ElevatorState.MOVING && targetState == ElevatorState.HOME) {
-                changeGripperState = true;
+                changeGripperState =
+                 true;
             }
             currentState = targetState;
         } else if (Math.abs(diff) <= tolerance) {
@@ -371,6 +372,11 @@ public class ElevatorClaw {
     public void setStopperDelay( double delay){
         stopperDelay = delay;
     }
+
+    public boolean isWristUp(){
+        return elevatorClaw.getWristLoc() > Constants.upWristPos;
+    }
+
     public void periodic(){ 
         if (enableStopperAuto) {
             checkStopperPosition();
@@ -378,7 +384,13 @@ public class ElevatorClaw {
         gripperTimer.start();
         if (gripperTimer.get() > stopperDelay){
             if(enableElevatorPID){
-                setElevatorPosition(elevatorTarget);
+                if(targetState != ElevatorState.HOME && targetState != ElevatorState.LEVEL1){
+                    if(isWristUp()){
+                        setElevatorPosition(elevatorTarget);
+                    }
+                }else{
+                    setElevatorPosition(elevatorTarget);
+                }
             }
             if (enableWristAuto) {
                 autoSetWristPos();

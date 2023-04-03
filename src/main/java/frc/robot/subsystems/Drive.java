@@ -370,7 +370,7 @@ public class Drive {
         if (!isRedAlliance) {
             return navX.getAngle();
         } else {
-            return navX.getAngle() + 180;
+            return navX.getAngle();
         }
     }
 

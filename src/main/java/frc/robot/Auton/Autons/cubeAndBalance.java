@@ -36,7 +36,7 @@ public class cubeAndBalance extends SequentialCommandGroup {
                                 new setVisionPipeline(7),
                                 new ParallelCommandGroup(
                                         new SequentialCommandGroup(
-                                                new pastXPosition(5.5, false),
+                                                new pastXPosition(0.5, true),
                                                 new armPos(ElevatorState.HOME)),
                                         new toArrayMaker(1.75, 0.75, 0.5, 0.5, 0.3, 20,
                                                 Filesystem.getDeployDirectory() + "/newPastAndBack.json")),

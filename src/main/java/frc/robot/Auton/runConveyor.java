@@ -20,10 +20,13 @@ public class runConveyor extends CommandBase {
     Intake intake;
 
     Timer timer;
-    public runConveyor() {
+
+    double time;
+    public runConveyor(double time) {
         drive = Drive.get_Instance();
         intake = Intake.get_Instance();
         timer = new Timer();
+        this.time = time;
     }
 
     @Override
@@ -44,7 +47,7 @@ public class runConveyor extends CommandBase {
      */
     @Override
     public boolean isFinished() {
-        return timer.get() > 0.5;
+        return timer.get() > time;
     }
 
     @Override

@@ -32,6 +32,8 @@ public class armPos extends CommandBase {
         elevatorClaw.setElevatorState(position);
         elevatorClaw.setStopperDelay(0);
         elevatorClaw.disableStopperAuto(false);
+        elevatorClaw.disableGripperAuto(false);
+        elevatorClaw.disableWristAuto(false);
     }
 
     /**

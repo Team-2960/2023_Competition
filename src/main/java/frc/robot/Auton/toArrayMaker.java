@@ -131,10 +131,10 @@ public class toArrayMaker extends CommandBase {
         double currYRobot = drive.getRobotPos().getY();
 
         double tarPointX = listOfCoords.get(currTarIndex).getX();
-        if (!Drive.isBlueAlliance()) {
-            tarPointX *= -1;
-        }
         double tarPointY = listOfCoords.get(currTarIndex).getY();
+        if (!Drive.isBlueAlliance()) {
+            tarPointY *= -1;
+        }
 
         SmartDashboard.putNumber("tarx", tarPointX);
         SmartDashboard.putNumber("tary", tarPointY);
@@ -172,11 +172,7 @@ public class toArrayMaker extends CommandBase {
         double currPosTheta = Math.toRadians(listOfCoords.get(currTarIndex).getTheta());
         double currPosPosTheta = Math.toRadians(listOfCoords.get(currTarIndex).getTheta() - 360);
         double currPosNegTheta = Math.toRadians(listOfCoords.get(currTarIndex).getTheta() + 360);
-        if (!Drive.isBlueAlliance()) {
-            currPosTheta += Math.toRadians(180);
-            currPosPosTheta += Math.toRadians(180);
-            currPosNegTheta += Math.toRadians(180);
-        }
+
 
         double dThetaRegErr = currPosTheta - currTheta;
         double dThetaNegErr = currPosNegTheta - currTheta;

@@ -44,7 +44,7 @@ public class wristUp extends CommandBase {
      */
     @Override
     public boolean isFinished() {
-        return elevatorClaw.getWristLoc() > Constants.upWristPos;
+        return elevatorClaw.getWristLoc() > Constants.upWristPos && timer.get() > 1;
     }
 
     @Override

@@ -29,6 +29,7 @@ public class releaseGamePiece extends CommandBase {
 
     @Override
     public void initialize() {
+        elevatorClaw.disableGripperAuto(true);
         timer.reset();
         timer.start();
     }

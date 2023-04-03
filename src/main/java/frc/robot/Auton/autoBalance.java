@@ -52,7 +52,6 @@ public class autoBalance extends CommandBase {
 
     @Override
     public void execute() {
-        if(Drive.isBlueAlliance()){
         double pitch = drive.navX.getRoll();
         if(Math.abs(pitch) > 2){
             timer.reset();
@@ -79,34 +78,6 @@ public class autoBalance extends CommandBase {
             timer2.start();
             drive.velY = 0;
         }
-    }else{
-        double pitch = drive.navX.getRoll();
-        if(Math.abs(pitch) > 2){
-            timer.reset();
-            timer.start();
-        }
-        if(Math.abs(drive.navX.getRawGyroX()) > 3){
-            timer2.start();
-            if(pitch > 5 && timer2.get() > 0.1){
-                drive.velY = 0.05;
-            }else if(pitch < -5 && timer2.get() > 0.1){
-                drive.velY = -0.05;
-            }
-        }else if(pitch > 10){
-            timer2.reset();
-            timer2.start();
-            drive.velY = -0.55;
-        }else if(pitch < -10){
-            timer2.reset();
-            timer2.start();
-            drive.velY = 0.55;
-        }
-        else{
-            timer2.reset();
-            timer2.start();
-            drive.velY = 0;
-        }
-    }
     }
 
     /**
