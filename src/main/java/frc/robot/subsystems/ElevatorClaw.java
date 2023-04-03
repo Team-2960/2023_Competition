@@ -191,7 +191,7 @@ public class ElevatorClaw {
     public void setElevatorPosition(double position){
         double maxSpeed = 6000;//8500;
         double minSpeed = 1000;
-        double constantRD = 1;
+        double constantRD = 0.5;
         double rate;
         double currentPos = (mRElevator.getSelectedSensorPosition());
         double diff = currentPos - position;
@@ -301,13 +301,13 @@ public class ElevatorClaw {
 
     public void setWristPosition(double pos){
         double currentPos = wristEncoder.getDistance();
-        double tolerance = 150;
-        if(currentPos > pos + tolerance && currentPos < pos - tolerance){
-            setWristState(Value.kOff);
-        }else if(currentPos < pos){
+        double tolerance = 0.2;
+        
+        if(currentPos < pos){
+            System.out.println("forward");
             setWristState(Value.kForward);
-        }else if(currentPos > pos){
-            setWristState(Value.kReverse);
+        }else{
+            setWristState(Value.kOff);
         }
     }
 
@@ -317,7 +317,8 @@ public class ElevatorClaw {
         } else if (targetState == ElevatorState.LEVEL1) {
             setWristState(Value.kReverse);
         } else if (targetState == ElevatorState.LEVEL2) {
-            setWristState(Value.kForward);
+            //setWristState(Value.kForward);
+            setWristPosition(Constants.level2Wrist);
         } else if (targetState == ElevatorState.LEVEL3) {
             setWristState(Value.kForward);
         }else if (targetState == ElevatorState.FEEDER){
@@ -374,7 +375,11 @@ public class ElevatorClaw {
     }
 
     public boolean isWristUp(){
-        return elevatorClaw.getWristLoc() > Constants.upWristPos;
+        double wristPos = Constants.upWristPos;
+        if(targetState == ElevatorState.LEVEL2){
+            wristPos = Constants.level2Wrist;
+        }
+        return elevatorClaw.getWristLoc() > wristPos;
     }
 
     public void periodic(){ 
@@ -384,7 +389,7 @@ public class ElevatorClaw {
         gripperTimer.start();
         if (gripperTimer.get() > stopperDelay){
             if(enableElevatorPID){
-                if(targetState != ElevatorState.HOME && targetState != ElevatorState.LEVEL1){
+                if(targetState != ElevatorState.HOME && targetState != ElevatorState.LEVEL1 && currentState == ElevatorState.MOVING){
                     if(isWristUp()){
                         setElevatorPosition(elevatorTarget);
                     }
