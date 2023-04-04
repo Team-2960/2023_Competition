@@ -19,10 +19,9 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.Filesystem;
 
-public class cubeAndBalance extends SequentialCommandGroup {
-    public cubeAndBalance(String url) throws IOException {
+public class cubeBalanceAndGrab extends SequentialCommandGroup {
+    public cubeBalanceAndGrab(String url) throws IOException {
         addCommands(
-
                 new ParallelRaceGroup(
                         new SequentialCommandGroup(
                                 new ParallelRaceGroup(
@@ -38,11 +37,13 @@ public class cubeAndBalance extends SequentialCommandGroup {
                                 new ParallelCommandGroup(
                                         new SequentialCommandGroup(
                                                 new pastXPosition(0.5, true),
-                                                new armPos(ElevatorState.HOME)),
+                                                new armPos(ElevatorState.HOME),
+                                                new wait(1),
+                                                new intakeOn(3)),
                                         new toArrayMaker(1.75, 0.75, 0.5, 0.5, 0.3, 20,
-                                                Filesystem.getDeployDirectory() + "/newPastAndBack.json")),
+                                                Filesystem.getDeployDirectory() + "/newPastAndGrab.json")),
                                 new autoBalance()),
-                        new wait(14.6)),
+                        new wait(14.4)),
                 new xWheels());
 
     }
