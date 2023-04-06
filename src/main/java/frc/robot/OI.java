@@ -161,7 +161,7 @@ public class OI {
             intake.setIntakeState(Value.kReverse);
         }
 
-        if (operatorControl.getRawAxis(2)>0.1){
+        if (operatorControl.getRawAxis(2)>0.1 || driverControl.getRawAxis(2)>0.1){
             intake.setIntakeAll(Intake.IntakeDirection.FORWARD, operatorControl.getRawAxis(2));
             
         }else if(operatorControl.getRawAxis(3)>0.1){
