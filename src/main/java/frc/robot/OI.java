@@ -169,7 +169,12 @@ public class OI {
         }
         else {
             intake.setIntakeAll(Intake.IntakeDirection.OFF, 0);
-        }          
+        }   
+        if(driverControl.getRawButton(5)){
+            elevatorClaw.pushGamePiece();
+        }else{
+            elevatorClaw.retractPusher();
+        }   
     }
     
 
@@ -407,7 +412,6 @@ public class OI {
         }else{
             elevatorClaw.calcElevatorSpeed(0);
         }
-
     }
 
 }

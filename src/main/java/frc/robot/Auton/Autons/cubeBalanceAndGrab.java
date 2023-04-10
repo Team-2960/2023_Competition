@@ -38,7 +38,7 @@ public class cubeBalanceAndGrab extends SequentialCommandGroup {
                                         new SequentialCommandGroup(
                                                 new pastXPosition(0.5, true),
                                                 new armPos(ElevatorState.HOME),
-                                                new wait(1),
+                                                new wait(0.25),
                                                 new intakeOn(3)),
                                         new toArrayMaker(1.75, 0.75, 0.5, 0.5, 0.3, 20,
                                                 Filesystem.getDeployDirectory() + "/newPastAndGrab.json")),

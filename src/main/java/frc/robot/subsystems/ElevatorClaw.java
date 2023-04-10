@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
@@ -25,6 +26,7 @@ public class ElevatorClaw {
     private DoubleSolenoid sGripper;
     private DoubleSolenoid sWrist;
     private DoubleSolenoid sStopper;
+    private Solenoid sPusher;
     // Photoeyes
     private DigitalInput lowerPhotoEye;
     //private DigitalInput upperPhotoEye;
@@ -80,6 +82,7 @@ public class ElevatorClaw {
         elevatorStartPosition();
         stopperTimer = new Timer();
         wristTimer =new Timer();
+        sPusher = new Solenoid(PneumaticsModuleType.REVPH, 4);
     }
 
     public void elevatorStartPosition() {
@@ -93,6 +96,14 @@ public class ElevatorClaw {
             elevatorClaw = new ElevatorClaw();
         }
         return elevatorClaw;
+    }
+
+    public void pushGamePiece(){
+        sPusher.set(false);
+    }
+
+    public void retractPusher(){
+        sPusher.set(true);
     }
 
     /**
@@ -281,7 +292,7 @@ public class ElevatorClaw {
     public void checkGripperPosition() {
         if (changeGripperState) {
             if (targetState == ElevatorState.HOME && currentState != ElevatorState.HOME) {
-                setGripperState(Value.kReverse);
+                //setGripperState(Value.kReverse);
                 changeGripperState = false;
             } else if (currentState == ElevatorState.MOVING && targetState != ElevatorState.HOME) {
                 setGripperState(Value.kReverse);

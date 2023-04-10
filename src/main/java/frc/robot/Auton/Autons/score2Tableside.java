@@ -35,7 +35,6 @@ public class score2Tableside extends SequentialCommandGroup {
                                 new armPos(ElevatorState.HOME),
                                 new intakeOn(4),
                                 new ParallelCommandGroup(
-
                                         new armPos(ElevatorState.LEVEL3),
                                         new SequentialCommandGroup(
                                                 new wait(0.75),

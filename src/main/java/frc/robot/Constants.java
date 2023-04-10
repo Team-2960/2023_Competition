@@ -65,10 +65,11 @@ public class Constants {
     public final static int mConveyor = 17;
 
     //SOLENOID
-    public final static int[] sGripperID = {4,5}; 
+    public final static int[] sGripperID = {9,5}; //4,5
     public final static int[] sIntakeID = {2,3};
     public final static int[] sWristID = {7,6};
     public final static int[] sStopperID = {15,14};
+    public final static int sPusherID = 4;
 
 
     //MISC CAN
